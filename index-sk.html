@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SKL 101 · Lecture 5 — Interacting and Using Generative AI Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff; --wash:#f2f6f8; --wash2:#e7eff3; --line:#d5e0e6; --line2:#bfcfd8;
+  --ink:#13233a; --ink2:#3d5066; --ink3:#66788b;
+  --teal:#0b6e75; --teal2:#0f8a92; --tealbg:#e4f3f3;
+  --navy:#0b3b54;
+  --amber:#a8700a; --amberbg:#fdf3dd;
+  --red:#b3261e; --redbg:#fbe9e7;
+  --green:#2e7d4f; --greenbg:#e5f4ea;
+  --violet:#5a4a9c; --violetbg:#eeebf8;
+  --s1:#a9dcd8; --s2:#8acbc8; --s3:#63b3b5; --s4:#3f9aa1; --s5:#2a808d; --s6:#1d6679; --s7:#154f67; --s8:#0b3b54;
+  --serif:"Newsreader", Georgia, "Times New Roman", serif;
+  --sans:"IBM Plex Sans", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r-sm:6px; --r-md:10px; --r-lg:16px;
+  --shadow:0 1px 2px rgba(19,35,58,.06), 0 6px 20px rgba(19,35,58,.06);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0f1a26; --wash:#142332; --wash2:#1a2c3e; --line:#26394c; --line2:#34495e;
+    --ink:#e8eef4; --ink2:#bccad7; --ink3:#8ea1b3; --tealbg:#12343a; --amberbg:#3a2d10; --redbg:#3b1a18; --greenbg:#15321f; --violetbg:#262040;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0f1a26; --wash:#142332; --wash2:#1a2c3e; --line:#26394c; --line2:#34495e;
+  --ink:#e8eef4; --ink2:#bccad7; --ink3:#8ea1b3; --tealbg:#12343a; --amberbg:#3a2d10; --redbg:#3b1a18; --greenbg:#15321f; --violetbg:#262040;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth; scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{animation:none!important; transition:none!important}}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16.5px; line-height:1.6; -webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:var(--teal)}
+:focus-visible{outline:3px solid var(--teal2); outline-offset:2px; border-radius:4px}
+h1,h2,h3,h4{font-family:var(--serif); color:var(--ink); line-height:1.2; margin:0 0 .5em; font-weight:600}
+h2{font-size:clamp(1.9rem,3.2vw,2.5rem); letter-spacing:-.01em}
+h3{font-size:1.45rem; margin-top:2.2rem}
+h4{font-size:1.12rem; font-family:var(--sans); font-weight:600}
+p{margin:0 0 1em}
+.muted{color:var(--ink3)}
+code,.mono{font-family:var(--mono); font-size:.9em}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky; top:0; z-index:40; background:rgba(255,255,255,.94); backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
+.topbar-in{display:flex; align-items:center; gap:14px; padding:10px 20px; max-width:1440px; margin:0 auto}
+.brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink); font-weight:600}
+.brand small{display:block; font-weight:400; color:var(--ink3); font-size:.78rem}
+.topbar .spacer{flex:1}
+.pbar{width:180px; height:8px; background:var(--wash2); border-radius:99px; overflow:hidden}
+.pbar i{display:block; height:100%; width:0; background:var(--teal); transition:width .4s}
+.plabel{font-size:.82rem; color:var(--ink3); white-space:nowrap}
+.btn{text-decoration:none; display:inline-block; white-space:nowrap; font:inherit; font-size:.92rem; font-weight:500; border:1px solid var(--line2); background:var(--paper); color:var(--ink); padding:8px 14px; border-radius:var(--r-sm); cursor:pointer; line-height:1.2}
+.btn:hover{border-color:var(--teal); color:var(--teal)}
+.btn.primary{background:var(--teal); color:#fff; border-color:var(--teal)}
+.btn.primary:hover{background:var(--navy); color:#fff}
+.btn.ghost{border-color:transparent; background:transparent}
+.btn.sm{padding:5px 10px; font-size:.84rem}
+.menu-btn{display:none}
+
+/* ---------- layout ---------- */
+.shell{display:grid; grid-template-columns:280px minmax(0,1fr); max-width:1440px; margin:0 auto}
+.side{position:sticky; top:calc(env(safe-area-inset-top,0px) + 58px); align-self:start; height:calc(100vh - 58px); overflow-y:auto; padding:22px 14px 40px 20px; border-right:1px solid var(--line)}
+.side h5{font:600 .8rem var(--sans); color:var(--ink3); margin:0 0 10px 8px}
+.stair{list-style:none; margin:0; padding:0; counter-reset:m}
+.stair a{display:grid; grid-template-columns:30px 1fr 18px; align-items:center; gap:10px; padding:7px 8px; border-radius:var(--r-sm); color:var(--ink2); text-decoration:none; font-size:.92rem; line-height:1.3}
+.stair a:hover{background:var(--wash)}
+.stair a.active{background:var(--tealbg); color:var(--ink); font-weight:600}
+.stair .dot{width:30px; height:24px; border-radius:5px; display:grid; place-items:center; color:#fff; font:600 .75rem var(--mono)}
+.stair .ck{width:16px; height:16px; border-radius:50%; border:1.5px solid var(--line2)}
+.stair a.done .ck{background:var(--green); border-color:var(--green); box-shadow:inset 0 0 0 3px var(--paper)}
+.side .lab{margin-top:22px; padding-top:16px; border-top:1px solid var(--line)}
+main{min-width:0}
+.section{padding:64px clamp(18px,4vw,64px) 40px; border-bottom:1px solid var(--line)}
+.wrap{max-width:1040px; margin:0 auto}
+.prose{max-width:74ch}
+.mod-head{display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:start; margin-bottom:26px}
+.mod-num{width:64px; height:64px; border-radius:12px; display:grid; place-items:center; color:#fff; font:600 1.5rem var(--serif)}
+.mod-head p{color:var(--ink2); margin:.2em 0 0; font-size:1.05rem}
+.mod-meta{font-size:.85rem; color:var(--ink3); margin-top:6px}
+
+/* ---------- hero ---------- */
+.hero{padding:56px clamp(18px,4vw,64px) 48px; background:linear-gradient(180deg,var(--wash) 0%, var(--paper) 100%); border-bottom:1px solid var(--line)}
+.hero-grid{display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:44px; align-items:center; max-width:1180px; margin:0 auto}
+.hero .inst{font-size:.92rem; color:var(--ink2); margin-bottom:18px}
+.hero h1{font-size:clamp(2.3rem,4.6vw,3.6rem); line-height:1.05; letter-spacing:-.02em; margin-bottom:.35em}
+.hero .lede{font-size:1.18rem; color:var(--ink2); max-width:52ch}
+.hero .who{display:flex; gap:14px; align-items:center; margin:22px 0 26px; font-size:.95rem}
+.hero .who b{display:block}
+.avatar{width:46px; height:46px; border-radius:50%; background:var(--navy); color:#fff; display:grid; place-items:center; font-family:var(--serif); font-size:1.1rem}
+.hero .actions{display:flex; flex-wrap:wrap; gap:10px}
+.ecg{display:block; width:100%; height:56px; margin:-6px 0 18px}
+.ecg path{fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}
+.ecg .p1{stroke:var(--red); stroke-dasharray:900; stroke-dashoffset:900; animation:draw 2.4s ease-out forwards}
+.ecg .p2{stroke:var(--teal); stroke-dasharray:900; stroke-dashoffset:900; animation:draw 2.4s .9s ease-out forwards}
+.ecg circle{fill:var(--teal); opacity:0; animation:fadein .3s 3s forwards}
+@keyframes draw{to{stroke-dashoffset:0}} @keyframes fadein{to{opacity:1}}
+
+/* journey staircase (signature element) */
+.journey{position:relative}
+.steps{display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:6px; align-items:end; height:330px}
+.step{position:relative; border:0; cursor:pointer; border-radius:8px 8px 3px 3px; color:#fff; text-align:left; padding:10px 8px; display:flex; flex-direction:column; justify-content:flex-start; font:inherit; transition:transform .2s, box-shadow .2s}
+.step:hover,.step.on{transform:translateY(-4px); box-shadow:0 8px 18px rgba(11,59,84,.25)}
+.step .n{font:600 .74rem var(--mono); opacity:.85}
+.step{min-width:0; overflow:hidden}
+.step .t{font:600 .95rem var(--serif); line-height:1.1; margin-top:auto; writing-mode:vertical-rl; transform:rotate(180deg); white-space:nowrap}
+.step.light{color:var(--navy)}
+.journey-cap{display:flex; justify-content:space-between; font-size:.8rem; color:var(--ink3); margin-top:8px}
+.journey-detail{margin-top:14px; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md); padding:14px 16px; min-height:96px; box-shadow:var(--shadow)}
+.journey-detail h4{margin:0 0 4px}
+.journey-detail p{margin:0; font-size:.95rem; color:var(--ink2)}
+.journey-detail .tag{font-size:.8rem; color:var(--teal); font-weight:600}
+
+/* ---------- generic components ---------- */
+.grid2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px}
+.grid3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+.grid4{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px}
+.panel{background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md); padding:18px 20px}
+.panel.wash{background:var(--wash); border-color:transparent}
+.panel h4{margin-top:0}
+.panel p:last-child,.panel ul:last-child{margin-bottom:0}
+.def{font-family:var(--serif); font-size:1.28rem; line-height:1.45; color:var(--ink); border-left:3px solid var(--teal); padding:4px 0 4px 20px; margin:18px 0 22px; max-width:68ch}
+.def cite{display:block; font:400 .82rem var(--sans); color:var(--ink3); margin-top:8px; font-style:normal}
+.key{display:flex; gap:14px; align-items:flex-start; background:var(--tealbg); border-radius:var(--r-md); padding:14px 18px; margin:20px 0; color:var(--ink)}
+.key.warn{background:var(--amberbg)}
+.key.stop{background:var(--redbg)}
+.key .ic{flex:0 0 28px; height:28px; border-radius:50%; display:grid; place-items:center; background:var(--teal); color:#fff; font-weight:700; font-size:.9rem}
+.key.warn .ic{background:var(--amber)} .key.stop .ic{background:var(--red)}
+.key p{margin:0}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0}
+.chip{font-size:.85rem; background:var(--wash); border:1px solid var(--line); border-radius:99px; padding:4px 11px; color:var(--ink2)}
+.chip.t{background:var(--tealbg); border-color:transparent; color:var(--teal); font-weight:500}
+ul.clean{list-style:none; padding:0; margin:0}
+ul.clean li{padding:6px 0 6px 22px; position:relative; border-bottom:1px dashed var(--line)}
+ul.clean li:last-child{border-bottom:0}
+ul.clean li::before{content:""; position:absolute; left:4px; top:15px; width:7px; height:7px; border-radius:50%; background:var(--teal)}
+ul.clean.no li::before{background:var(--red); border-radius:1px}
+ul.clean.ok li::before{background:var(--green)}
+.flow{display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:12px 0; font-size:.9rem}
+.flow span{background:var(--paper); border:1px solid var(--line2); border-radius:var(--r-sm); padding:5px 10px; font-weight:500}
+.flow span.hl{background:var(--amberbg); border-color:var(--amber); color:var(--amber)}
+.flow span.tl{background:var(--tealbg); border-color:var(--teal); color:var(--teal)}
+.flow b{color:var(--ink3); font-weight:400}
+table.t{width:100%; border-collapse:collapse; font-size:.93rem}
+table.t th,table.t td{padding:10px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top}
+table.t th{background:var(--wash); font-weight:600; color:var(--ink)}
+.tscroll{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r-md); margin:14px 0}
+.tscroll table.t tr:last-child td{border-bottom:0}
+.src{font-size:.82rem; color:var(--ink3); margin-top:10px}
+.eq{font-family:var(--serif); font-size:1.15rem; text-align:center; padding:14px; background:var(--wash); border-radius:var(--r-md); margin:18px 0}
+
+/* quick check */
+details.qc{border:1px solid var(--line2); border-radius:var(--r-md); margin:18px 0; background:var(--paper)}
+details.qc summary{cursor:pointer; padding:12px 16px; font-weight:600; list-style:none; display:flex; gap:10px; align-items:center}
+details.qc summary::-webkit-details-marker{display:none}
+details.qc summary::before{content:"?"; width:24px; height:24px; border-radius:50%; background:var(--violet); color:#fff; display:grid; place-items:center; font-size:.85rem; flex:0 0 24px}
+details.qc[open] summary{border-bottom:1px solid var(--line)}
+details.qc .ans{padding:12px 16px 14px 50px; color:var(--ink2)}
+details.qc .ans b{color:var(--green)}
+
+/* activity card */
+.activity{border:1.5px solid var(--navy); border-radius:var(--r-lg); padding:0; margin:26px 0; overflow:hidden}
+.activity .ah{background:var(--navy); color:#fff; padding:12px 18px; display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center}
+.activity .ah b{font-family:var(--serif); font-size:1.15rem; font-weight:600}
+.activity .ah span{font-size:.85rem; opacity:.85}
+.activity .ab{padding:16px 20px}
+.activity ol{margin:0 0 12px; padding-left:20px}
+
+/* tabs */
+.tabs{display:flex; flex-wrap:wrap; gap:6px; border-bottom:1px solid var(--line); margin-bottom:16px}
+.tabs button{font:inherit; font-size:.93rem; background:none; border:0; border-bottom:2px solid transparent; padding:9px 12px; color:var(--ink3); cursor:pointer; margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--teal); border-bottom-color:var(--teal); font-weight:600}
+.tabpane[hidden]{display:none}
+
+/* module complete */
+.complete{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:36px; padding:14px 18px; background:var(--wash); border-radius:var(--r-md)}
+.complete.is-done{background:var(--greenbg)}
+
+/* flip cards (inline) */
+.flipgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin:14px 0}
+.flip{perspective:900px; height:150px; cursor:pointer; background:none; border:0; padding:0; font:inherit; text-align:left}
+.flip .in{position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:var(--r-md); padding:14px; display:flex; flex-direction:column; justify-content:center}
+.flip .f{background:var(--tealbg); border:1px solid transparent}
+.flip .f strong{font-family:var(--serif); font-size:1.2rem; color:var(--navy)}
+.flip .f small{color:var(--teal); font-size:.82rem; margin-top:4px}
+.flip .b{background:var(--navy); color:#fff; transform:rotateY(180deg); font-size:.9rem; line-height:1.4}
+
+/* steppers */
+.ladder{display:grid; gap:10px}
+.rung{display:grid; grid-template-columns:60px 1fr; gap:14px; align-items:start; padding:12px 14px; border-radius:var(--r-md); border:1px solid var(--line); background:var(--paper); opacity:.45; transition:opacity .3s, border-color .3s}
+.rung.on{opacity:1; border-color:var(--teal)}
+.rung .v{font:600 1.05rem var(--serif); color:#fff; border-radius:6px; text-align:center; padding:8px 0}
+.rung q{font-family:var(--serif); font-size:1.03rem; display:block}
+.rung small{color:var(--ink3)}
+.range{width:100%; accent-color:var(--teal)}
+
+/* ctco builder */
+.builder{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px}
+.field{margin-bottom:12px}
+.field label{display:block; font-weight:600; font-size:.9rem; margin-bottom:4px}
+.field label i{font-style:normal; font-weight:400; color:var(--ink3)}
+.field input,.field textarea,.field select{width:100%; font:inherit; font-size:.95rem; padding:9px 11px; border:1px solid var(--line2); border-radius:var(--r-sm); background:var(--paper); color:var(--ink)}
+.field textarea{min-height:64px; resize:vertical}
+.out{background:var(--wash); border-radius:var(--r-md); padding:16px; font-family:var(--serif); font-size:1.05rem; min-height:160px; white-space:pre-wrap}
+.meter{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin:10px 0}
+.meter span{font-size:.78rem; text-align:center; padding:5px 0; border-radius:5px; background:var(--wash2); color:var(--ink3)}
+.meter span.ok{background:var(--green); color:#fff}
+
+/* error table */
+.errtab td.cell{cursor:pointer}
+.errtab td.cell:hover{background:var(--wash)}
+.errtab td.bad-hit{background:var(--greenbg); outline:2px solid var(--green)}
+.errtab td.miss{background:var(--redbg)}
+.bars{display:grid; gap:8px; margin:12px 0}
+.barrow{display:grid; grid-template-columns:150px 1fr 48px; gap:10px; align-items:center; font-size:.9rem}
+.barrow .track{height:20px; background:var(--wash2); border-radius:4px; overflow:hidden}
+.barrow .track i{display:block; height:100%; border-radius:4px}
+
+/* tool gallery */
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin:16px 0}
+.filters button{font:inherit; font-size:.88rem; padding:6px 13px; border-radius:99px; border:1px solid var(--line2); background:var(--paper); cursor:pointer; color:var(--ink2)}
+.filters button.on{background:var(--navy); color:#fff; border-color:var(--navy)}
+.tools{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px}
+.tool{text-align:left; font:inherit; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md); padding:14px 16px; cursor:pointer; display:flex; flex-direction:column; gap:6px}
+.tool:hover{border-color:var(--teal)}
+.tool .tn{font:600 1.1rem var(--serif); color:var(--ink)}
+.tool .tu{font:.8rem var(--mono); color:var(--teal)}
+.tool .td{font-size:.88rem; color:var(--ink2); line-height:1.45}
+.tool .tc{font-size:.76rem; color:var(--ink3)}
+dialog{border:0; border-radius:var(--r-lg); padding:0; max-width:720px; width:calc(100% - 28px); box-shadow:0 20px 60px rgba(11,59,84,.3); color:var(--ink); background:var(--paper)}
+dialog::backdrop{background:rgba(19,35,58,.45)}
+.dlg-h{padding:18px 22px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:12px; align-items:flex-start}
+.dlg-h h3{margin:0}
+.dlg-b{padding:18px 22px 22px; max-height:70vh; overflow:auto}
+
+/* skill builder */
+.skillgrid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 16px}
+.skillgrid .field{margin:0}
+
+/* sorting / matching */
+.pool{display:flex; flex-wrap:wrap; gap:8px; min-height:48px; padding:10px; border:1px dashed var(--line2); border-radius:var(--r-md); margin:10px 0}
+.item{font:inherit; font-size:.9rem; border:1px solid var(--line2); background:var(--paper); border-radius:var(--r-sm); padding:7px 11px; cursor:pointer; text-align:left}
+.item.sel{outline:2px solid var(--teal); background:var(--tealbg)}
+.item.right{background:var(--greenbg); border-color:var(--green)}
+.item.wrong{background:var(--redbg); border-color:var(--red)}
+.bins{display:grid; gap:10px}
+.bin{border:1px solid var(--line); border-radius:var(--r-md); padding:10px; min-height:90px; background:var(--wash); cursor:pointer}
+.bin h5{margin:0 0 8px; font:600 .95rem var(--sans)}
+.bin .item{margin:0 6px 6px 0}
+.match{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:10px}
+.match .col{display:grid; gap:8px}
+.feedback{font-size:.95rem; margin-top:10px; min-height:1.4em}
+.feedback.good{color:var(--green)} .feedback.bad{color:var(--red)}
+
+/* study lab */
+.lab-sec{background:var(--wash)}
+.deck{max-width:640px; margin:0 auto}
+.bigcard{perspective:1200px; height:300px; cursor:pointer; background:none; border:0; padding:0; width:100%; font:inherit}
+.bigcard .in{position:relative; height:100%; transition:transform .55s; transform-style:preserve-3d}
+.bigcard.on .in{transform:rotateY(180deg)}
+.bigcard .f,.bigcard .b{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:var(--r-lg); padding:28px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; box-shadow:var(--shadow)}
+.bigcard .f{background:var(--paper); border:1px solid var(--line)}
+.bigcard .f .q{font:600 1.55rem var(--serif); color:var(--navy); line-height:1.25}
+.bigcard .f .cat{position:absolute; top:16px; left:18px; font-size:.8rem; color:var(--teal)}
+.bigcard .f .hint{position:absolute; bottom:14px; font-size:.8rem; color:var(--ink3)}
+.bigcard .b{background:var(--navy); color:#fff; transform:rotateY(180deg); font-size:1.08rem; line-height:1.55}
+.deckbar{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px; flex-wrap:wrap}
+.deckbar .cnt{font:500 .9rem var(--mono); color:var(--ink3)}
+.quiz{max-width:720px; margin:0 auto}
+.qcard{background:var(--paper); border:1px solid var(--line); border-radius:var(--r-lg); padding:24px; box-shadow:var(--shadow)}
+.qcard .qn{font:500 .85rem var(--mono); color:var(--ink3)}
+.qcard h4{font:600 1.25rem var(--serif); margin:6px 0 16px}
+.opt{display:block; width:100%; text-align:left; font:inherit; padding:11px 14px; border:1px solid var(--line2); border-radius:var(--r-sm); background:var(--paper); margin-bottom:8px; cursor:pointer; color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt.right{background:var(--greenbg); border-color:var(--green)}
+.opt.wrong{background:var(--redbg); border-color:var(--red)}
+.opt:disabled{cursor:default}
+.explain{margin-top:10px; padding:12px 14px; background:var(--wash); border-radius:var(--r-sm); font-size:.95rem}
+.qprog{height:6px; background:var(--wash2); border-radius:9px; overflow:hidden; margin-bottom:14px}
+.qprog i{display:block; height:100%; background:var(--teal); transition:width .3s}
+.gloss-search{width:100%; font:inherit; padding:11px 14px; border:1px solid var(--line2); border-radius:var(--r-md); margin-bottom:12px; background:var(--paper); color:var(--ink)}
+.gloss{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:10px}
+.gloss div{background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md); padding:12px 14px}
+.gloss b{font-family:var(--serif); font-size:1.08rem; color:var(--navy)}
+.gloss p{margin:4px 0 0; font-size:.9rem; color:var(--ink2)}
+.conf{display:grid; gap:8px}
+.confrow{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:center; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md); padding:10px 14px; font-size:.93rem}
+.confrow .bl{font-size:.75rem; color:var(--violet); font-weight:600}
+.seg{display:flex; border:1px solid var(--line2); border-radius:var(--r-sm); overflow:hidden}
+.seg button{font:inherit; font-size:.8rem; border:0; background:var(--paper); padding:6px 9px; cursor:pointer; color:var(--ink2); border-left:1px solid var(--line)}
+.seg button:first-child{border-left:0}
+.seg button.on{background:var(--teal); color:#fff}
+.checklist label{display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border:1px solid var(--line); border-radius:var(--r-sm); margin-bottom:8px; cursor:pointer; background:var(--paper)}
+.checklist input{margin-top:5px; accent-color:var(--teal); width:18px; height:18px}
+.checklist b{display:block}
+.lo{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
+.lo div{border:1px solid var(--line); border-radius:var(--r-md); padding:12px 14px; background:var(--paper)}
+.lo .bl{display:inline-block; font-size:.74rem; font-weight:600; border-radius:4px; padding:2px 7px; color:#fff; margin-bottom:6px}
+footer{padding:40px clamp(18px,4vw,64px); color:var(--ink3); font-size:.88rem}
+.ref{padding-left:1.2em} .ref li{margin-bottom:10px}
+.toast{position:fixed; bottom:calc(env(safe-area-inset-bottom,0px) + 18px); left:50%; transform:translateX(-50%) translateY(20px); background:var(--navy); color:#fff; padding:10px 18px; border-radius:99px; font-size:.9rem; opacity:0; transition:.3s; z-index:60; pointer-events:none}
+.toast.on{opacity:1; transform:translateX(-50%)}
+
+/* responsive */
+@media (max-width:1100px){ .hero-grid{grid-template-columns:1fr} .lo{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed; top:0; left:0; bottom:0; width:290px; height:100%; background:var(--paper); z-index:50; transform:translateX(-100%); transition:transform .3s; padding-top:calc(env(safe-area-inset-top,0px) + 20px)}
+  .side.open{transform:none; box-shadow:0 0 40px rgba(0,0,0,.2)}
+  .menu-btn{display:inline-block}
+  .pbar{width:90px}
+  .grid3,.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .builder{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  body{font-size:15.5px}
+  .grid2,.grid3,.grid4,.lo,.skillgrid,.match{grid-template-columns:1fr}
+  .steps{height:260px; gap:3px}
+  .step{padding:6px 4px} .step .t{font-size:.78rem}
+  .plabel,.brand small,.pbar,.brand .avatar,.journey-cap span:nth-child(2){display:none} .topbar-in{padding:8px 12px; gap:8px} .brand{white-space:nowrap; font-size:.95rem}
+  .mod-head{grid-template-columns:1fr} .mod-num{width:48px; height:48px; font-size:1.2rem}
+  .barrow{grid-template-columns:110px 1fr 40px}
+  .bigcard{height:340px}
+}
+.scrim{display:none}
+@media (max-width:900px){ .scrim.on{display:block; position:fixed; inset:0; background:rgba(19,35,58,.35); z-index:45} }
+</style>
+</head>
+<body>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="scrim" id="scrim"></div>
+<header class="topbar">
+  <div class="topbar-in">
+    <button class="btn ghost menu-btn" id="menuBtn" aria-label="Open lecture contents">☰</button>
+    <a class="brand" href="#top"><span class="avatar" style="width:36px;height:36px;font-size:.9rem">5</span><span>SKL 101 · Lecture 5<small>Interacting and Using Generative AI Tools</small></span></a>
+    <span class="spacer"></span>
+    <span class="plabel" id="plabel">0 of 12 modules complete</span>
+    <div class="pbar" aria-hidden="true"><i id="pfill"></i></div>
+    <a class="btn sm primary" href="#lab">Study lab</a>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="side" id="side" aria-label="Lecture contents">
+  <h5>The lecture, step by step</h5>
+  <ol class="stair" id="stair"></ol>
+  <div class="lab">
+    <h5>Practise and review</h5>
+    <ol class="stair" id="stair2"></ol>
+  </div>
+</aside>
+
+<main id="top">
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="inst">King Saud University, College of Medicine · Medical Education Department · MIELU · MBBS Year 1</div>
+      <svg class="ecg" viewBox="0 0 600 56" preserveAspectRatio="none" aria-hidden="true">
+        <path class="p1" d="M0 30 H90 L102 30 L110 20 L118 30 L132 30 L140 4 L150 52 L160 30 L180 30 L190 24 L200 30 H260"/>
+        <path class="p2" d="M260 30 H300 V12 H360 V30 H400 V44 H470 V30 H540 V18 H592"/>
+        <circle cx="592" cy="18" r="4"/>
+      </svg>
+      <h1>Interacting and Using Generative AI Tools</h1>
+      <p class="lede">From asking AI a question to building an AI-assisted solution. Eight steps, each adding capability for the system and responsibility for you.</p>
+      <div class="who"><span class="avatar">GA</span><div><b>Dr. Ghalib H. Alshammri</b><span class="muted">Associate Professor in AI &amp; Data Science · galshammri@ksu.edu.sa</span></div></div>
+      <div class="actions">
+        <a class="btn primary" href="#m1">Start the lecture</a>
+        <a class="btn" href="#lab">Open the study lab</a>
+        <a class="btn" href="#assign">Assignments</a>
+      </div>
+    </div>
+    <div class="journey" id="journey">
+      <div class="steps" id="steps" role="list" aria-label="The AI journey, eight levels"></div>
+      <div class="journey-cap"><span>Ask AI</span><span>More autonomy, more responsibility</span><span>Build with AI</span></div>
+      <div class="journey-detail" id="jdetail" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= M1 ================= -->
+<section class="section" id="m1" data-mod="1">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--s1);color:var(--navy)">1</div><div><h2>Orientation: the AI journey</h2><p>What you will learn, what to bring, and the one idea that runs through the whole lecture.</p><div class="mod-meta">Slides 1–7 · about 10 minutes</div></div></div>
+
+  <div class="prose">
+  <p>The goal of this lecture is a useful, responsible <strong>AI-assisted healthcare solution</strong>, not reaching the agent level for its own sake. Read the staircase above from bottom left to top right: each level lets the system do more, and so each level asks more of the human supervising it.</p>
+  </div>
+
+  <h3>Learning outcomes</h3>
+  <p class="muted">Colour shows the Bloom level. By the end of this lecture you will be able to:</p>
+  <div class="lo" id="loGrid"></div>
+
+  <h3>Lecture requirements</h3>
+  <p class="muted">Tick each item before the session. Your ticks are saved on this device.</p>
+  <div class="checklist grid2" id="reqList"></div>
+  <div class="key"><span class="ic">i</span><p>The free plans of ChatGPT and Claude are enough for everything in class. No patient or confidential information is ever entered into these accounts.</p></div>
+
+  <h3>What happens when you press Enter?</h3>
+  <p class="prose">The model does not look up the right answer. It generates a response from the available context and the way it produces output. Tap each factor to see what it means.</p>
+  <div class="flipgrid" id="enterCards"></div>
+  <div class="key warn"><span class="ic">!</span><p><strong>Fluent ≠ True.</strong> A fluent answer can still be incorrect. Always inspect, critique, refine and verify.</p></div>
+
+  <h3>Interaction is a loop, not a question</h3>
+  <div class="grid2">
+    <div class="panel wash"><h4>Level 1: ask</h4><div class="flow"><span>Question</span><b>→</b><span>Answer</span></div><p class="muted">This is only the beginning. The first response is a draft, not the final answer.</p></div>
+    <div class="panel"><h4>Skilled users iterate</h4>
+      <ul class="clean">
+        <li><b>Inspect.</b> Did I read the whole response?</li>
+        <li><b>Critique.</b> What is missing, wrong, unclear, or unsupported?</li>
+        <li><b>Refine.</b> What exactly should the AI change?</li>
+        <li><b>Verify.</b> Can I confirm the important claims using a trusted source?</li>
+      </ul></div>
+  </div>
+  <div class="flow"><span>Prompt</span><b>→</b><span>Response</span><b>→</b><span class="tl">Inspect</span><b>→</b><span class="tl">Critique</span><b>→</b><span class="tl">Refine</span><b>→</b><span class="hl">Verify</span><b>↺ back to Prompt when verification reveals a gap</b></div>
+  <p class="prose">In healthcare it is not enough for an answer to be well written. We must know where the information came from and whether it can be verified.</p>
+  <div class="complete" data-complete="1"></div>
+</div>
+</section>
+
+<!-- ================= M2 ================= -->
+<section class="section" id="m2" data-mod="2">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--s2);color:var(--navy)">2</div><div><h2>Foundations of artificial intelligence</h2><p>What AI is, why it matters, how systems differ, and how AI, machine learning and deep learning nest inside each other.</p><div class="mod-meta">Slides 8–17</div></div></div>
+
+  <div class="tabs" role="tablist" data-tabs="aidef">
+    <button role="tab" aria-selected="true" data-tab="unesco">Capability view (UNESCO)</button>
+    <button role="tab" aria-selected="false" data-tab="sdaia">Practical view (SDAIA)</button>
+  </div>
+  <div class="tabpane" data-pane="unesco">
+    <blockquote class="def">Artificial Intelligence refers to computer systems designed to perform functions associated with human intelligence, including perception, learning, reasoning, problem-solving, language interaction, and creative production.<cite>UNESCO, COMEST, Preliminary Study on the Ethics of Artificial Intelligence, 2019; UNESCO, 2021</cite></blockquote>
+    <div class="chips"><span class="chip t">Perception</span><span class="chip t">Learning</span><span class="chip t">Reasoning</span><span class="chip t">Problem solving</span><span class="chip t">Language interaction</span><span class="chip t">Creative production</span></div>
+    <p class="prose">AI is difficult to define because it is a broad and evolving field. As computers advance, the range of tasks considered “intelligent” keeps expanding, so no single definition captures every system. <strong>AI is not one technology or one algorithm</strong>: it is an umbrella field.</p>
+  </div>
+  <div class="tabpane" data-pane="sdaia" hidden>
+    <blockquote class="def">AI can be understood as systems that use technologies to collect and process data, generate predictions or recommendations, and support or make decisions with varying levels of autonomy in pursuit of specific goals.<cite>Saudi Data &amp; Artificial Intelligence Authority (SDAIA)</cite></blockquote>
+    <div class="flow"><span>Collect data</span><b>→</b><span>Process &amp; learn</span><b>→</b><span>Predict · recommend · decide</span><b>→</b><span>Take or support action</span><b>→</b><span>Achieve a defined goal</span></div>
+    <p class="prose">AI is not simply about making machines “think like humans”. It is also about building systems that use data and computation to produce intelligent outputs and actions, with degrees of autonomy ranging from <em>decision support</em> to <em>automated action</em>.</p>
+  </div>
+
+  <h3>Why AI matters, and why capability ≠ hype</h3>
+  <div class="grid2">
+    <div class="panel"><h4>What AI can contribute</h4><ul class="clean ok"><li><b>Innovation &amp; growth</b>: new products, services and ways of working</li><li><b>Quality</b>: more consistent, data-informed processes</li><li><b>Capabilities</b>: extends human and organisational capacity</li><li><b>Efficiency</b>: automates or optimises selected processes</li><li><b>Productivity</b>: helps people accomplish tasks more effectively</li></ul></div>
+    <div class="panel"><h4>What rapid growth also creates</h4><ul class="clean no"><li>Widespread adoption</li><li>High expectations</li><li>Risk of exaggeration or misunderstanding</li><li>Unrealistic expectations about AI capabilities</li></ul><p class="src">Source: SDAIA</p></div>
+  </div>
+  <div class="key"><span class="ic">✓</span><p>Understanding what AI can do, cannot do, and under what conditions it works is essential for responsible adoption and sound decision-making.</p></div>
+
+  <h3>Seven criteria for distinguishing AI systems</h3>
+  <p class="prose">These are not separate categories: a single system usually combines several. An AI study assistant may use language, knowledge, reasoning, planning and tools; a computer-vision system may rely mainly on perception, learning and reasoning.</p>
+  <div class="tscroll"><table class="t">
+    <tr><th>#</th><th>Criterion</th><th>Core question</th><th>Examples</th></tr>
+    <tr><td>1</td><td>Perception by all senses</td><td>Can it interpret information from different modalities?</td><td>Vision, speech, audio, touch, sensors</td></tr>
+    <tr><td>2</td><td>Natural language processing</td><td>Can it understand and generate human language?</td><td>Text, speech, dialogue</td></tr>
+    <tr><td>3</td><td>Knowledge engineering</td><td>How does it represent and use knowledge?</td><td>Rules, ontologies, knowledge bases</td></tr>
+    <tr><td>4</td><td>Learning</td><td>Can it improve from data or experience?</td><td>Machine learning, continuous improvement</td></tr>
+    <tr><td>5</td><td>Thinking &amp; reasoning</td><td>Can it infer, compare, solve, or draw conclusions?</td><td>Inference, problem solving, decision support</td></tr>
+    <tr><td>6</td><td>Planning</td><td>Can it determine a sequence of actions to reach a goal?</td><td>Task decomposition, action sequencing</td></tr>
+    <tr><td>7</td><td>Movement &amp; control of the environment</td><td>Can it physically or digitally affect its environment?</td><td>Robots, automated systems, software actions</td></tr>
+  </table></div>
+
+  <h3>Types of AI by breadth</h3>
+  <div class="grid3">
+    <div class="panel" style="border:2px solid var(--teal)"><h4>ANI · Narrow</h4><p>AI designed for specific tasks or a limited domain.</p><p class="muted">Siri, Google Translate, a medical image classifier.</p><span class="chip t">Currently deployed</span></div>
+    <div class="panel" style="border:2px dashed var(--line2)"><h4>AGI · General</h4><p>Hypothetical AI with general-purpose capabilities comparable to humans across many domains.</p><span class="chip">Not yet demonstrated</span></div>
+    <div class="panel" style="border:2px dashed var(--line2)"><h4>ASI · Superintelligent</h4><p>Hypothetical AI whose capabilities surpass humans across essentially all domains.</p><span class="chip">Theoretical</span></div>
+  </div>
+  <div class="key"><span class="ic">i</span><p>These categories describe breadth of intelligence, not technologies. A system can use deep learning, generative AI, tools or agents and still be narrow AI.</p></div>
+
+  <h3>AI ⊃ Machine learning ⊃ Deep learning</h3>
+  <div class="grid2">
+    <svg viewBox="0 0 320 250" role="img" aria-label="Nested circles: deep learning inside machine learning inside artificial intelligence" style="max-width:360px">
+      <circle cx="160" cy="125" r="118" fill="var(--tealbg)" stroke="var(--s4)" stroke-width="2"/>
+      <circle cx="160" cy="150" r="82" fill="#cfe9e8" stroke="var(--s6)" stroke-width="2"/>
+      <circle cx="160" cy="175" r="46" fill="var(--s7)"/>
+      <text x="160" y="40" text-anchor="middle" font-family="Newsreader,serif" font-size="17" fill="#0b3b54">Artificial Intelligence</text>
+      <text x="160" y="100" text-anchor="middle" font-family="Newsreader,serif" font-size="15" fill="#0b3b54">Machine Learning</text>
+      <text x="160" y="180" text-anchor="middle" font-family="Newsreader,serif" font-size="14" fill="#fff">Deep Learning</text>
+    </svg>
+    <div>
+      <ul class="clean">
+        <li><b>AI</b>: the broad field of systems performing tasks associated with human intelligence. Example: a rule-based expert system.</li>
+        <li><b>ML</b>: algorithms learn patterns from data rather than relying entirely on explicit rules. Example: predicting whether an image contains a condition.</li>
+        <li><b>DL</b>: multi-layer neural networks learn complex representations from large data. Example: a deep network for medical image classification.</li>
+      </ul>
+      <div class="key warn"><span class="ic">!</span><p>Deep learning does not reach conclusions “without human intervention”. It still needs human-defined objectives, data preparation, training, evaluation and validation.</p></div>
+    </div>
+  </div>
+
+  <h4 style="margin-top:22px">Machine learning vs deep learning</h4>
+  <div class="flow"><span>ML</span><b>:</b><span>Human-designed features</span><b>→</b><span>Learning algorithm</span><b>→</b><span>Prediction</span></div>
+  <div class="flow"><span>DL</span><b>:</b><span>Raw data</span><b>→</b><span>Many network layers</span><b>→</b><span>Learned representations</span><b>→</b><span>Prediction / generation</span></div>
+  <div class="tscroll"><table class="t">
+    <tr><th>Dimension</th><th>Machine learning</th><th>Deep learning</th></tr>
+    <tr><td>Approach</td><td>Learns patterns; often relies on human-selected features and structured data</td><td>Multi-layer networks learn features and representations automatically</td></tr>
+    <tr><td>Data</td><td>Often performs well with structured, moderate-sized datasets</td><td>Often benefits from large datasets, including images, audio and text</td></tr>
+    <tr><td>Human involvement</td><td>Humans select features, configure, validate and correct</td><td>Substantial human involvement in data, architecture, training and validation; feature extraction more automated</td></tr>
+    <tr><td>Hardware</td><td>Many models run efficiently on CPUs</td><td>Training large models often benefits from GPUs or accelerators</td></tr>
+    <tr><td>Training time</td><td>Seconds to hours</td><td>Hours to weeks or longer</td></tr>
+    <tr><td>Typical applications</td><td>Classification, regression, forecasting, recommendation, fraud detection</td><td>Computer vision, speech, NLP, autonomous systems, generative AI</td></tr>
+  </table></div>
+  <details class="qc"><summary>Is it true that deep learning always requires GPUs?</summary><div class="ans"><b>No.</b> Deep learning can run on CPUs; GPUs or other accelerators are often preferred for computationally intensive training. Likewise, “ML = simple, DL = complex” is too simplistic: the choice depends on the data, problem, resources and requirements.</div></details>
+  <div class="complete" data-complete="2"></div>
+</div>
+</section>
+
+<!-- ================= M3 ================= -->
+<section class="section" id="m3" data-mod="3">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--s3)">3</div><div><h2>Generative AI and large language models</h2><p>How GenAI differs from traditional AI, what it offers healthcare in the KSA, and what an LLM is (and is not).</p><div class="mod-meta">Slides 18–26</div></div></div>
+
+  <blockquote class="def">Generative AI is a class of AI systems that can generate new content by learning patterns from data and using those patterns to produce outputs in response to user instructions.</blockquote>
+  <div class="flow"><span class="tl">Learn patterns</span><b>→</b><span class="tl">Interpret the instruction</span><b>→</b><span class="tl">Generate new content</span></div>
+  <div class="chips"><span class="chip">Text</span><span class="chip">Images</span><span class="chip">Audio</span><span class="chip">Video</span><span class="chip">Code</span><span class="chip">Other digital content</span></div>
+  <p class="prose">Unlike systems built only to classify, predict or retrieve, GenAI produces new outputs, not copies of a single training example. In healthcare education it can produce study summaries, explanations, practice questions, diagrams and draft content; <strong>outputs must be reviewed and verified</strong>.</p>
+
+  <h3>Traditional AI vs generative AI</h3>
+  <div class="grid2">
+    <div class="panel"><h4>Traditional AI</h4><div class="flow"><span>Input</span><b>→</b><span>Analyse</span><b>→</b><span>Predict / classify</span><b>→</b><span>Output</span></div>
+      <p><b>Asks:</b> “What is this?” “What is likely to happen?”</p><p><b>Goal:</b> predict, classify, detect, or decide. <b>Data:</b> often structured and/or labelled. <b>Output:</b> a label, score, prediction or decision.</p>
+      <p class="muted">Example: “Is this medical image likely to show pneumonia?”</p></div>
+    <div class="panel"><h4>Generative AI</h4><div class="flow"><span>Prompt</span><b>→</b><span>Understand patterns</span><b>→</b><span>Generate / transform</span><b>→</b><span>New content</span></div>
+      <p><b>Asks:</b> “Create something based on what I asked.”</p><p><b>Goal:</b> generate new content. <b>Data:</b> large-scale, often self-supervised. <b>Output:</b> text, image, audio, video, code.</p>
+      <p class="muted">Example: “Summarise this medical article for a first-year medical student.”</p></div>
+  </div>
+  <div class="key"><span class="ic">i</span><p>The distinction is functional, not absolute. Modern systems can combine predictive, retrieval, reasoning and generative capabilities.</p></div>
+
+  <h3>Five benefits of GenAI for healthcare transformation in the KSA</h3>
+  <div class="tabs" role="tablist" data-tabs="benefits">
+    <button role="tab" aria-selected="true" data-tab="b1">1 Efficiency</button>
+    <button role="tab" aria-selected="false" data-tab="b2">2 Communication</button>
+    <button role="tab" aria-selected="false" data-tab="b3">3 Decisions</button>
+    <button role="tab" aria-selected="false" data-tab="b4">4 Accessibility</button>
+    <button role="tab" aria-selected="false" data-tab="b5">5 Public services</button>
+  </div>
+  <div class="tabpane" data-pane="b1"><h4>Increased efficiency &amp; productivity</h4><ul class="clean"><li>Summarising lengthy documents and educational materials</li><li>Transcribing spoken or recorded content</li><li>Drafting reports, correspondence and educational resources</li><li>Generating images, diagrams and other digital content</li></ul><p class="muted">Potential benefit: less time on repetitive tasks, more time for higher-value human work.</p></div>
+  <div class="tabpane" data-pane="b2" hidden><h4>Improved communication &amp; collaboration</h4><ul class="clean"><li>Content creation for education and communication</li><li>Conversational interfaces and virtual assistants</li><li>Multilingual communication and content adaptation</li><li>Collaborative knowledge environments</li><li>AI-assisted information exchange across teams</li></ul><p class="muted">Potential benefit: better access to information, more effective human–human and human–AI collaboration.</p></div>
+  <div class="tabpane" data-pane="b3" hidden><h4>Informed decision-making</h4><div class="flow"><span>Understand</span><b>→</b><span>Compare</span><b>→</b><span>Explore</span><b>→</b><span>Decide</span></div><p>GenAI organises, summarises and interprets text, audio, images, video and structured or unstructured data; it helps explore scenarios and compare alternatives. Healthcare examples: summarising literature, organising educational resources, comparing documented scenarios, supporting administrative planning.</p><div class="key"><span class="ic">✓</span><p>AI supports the decision; humans remain responsible for the decision.</p></div></div>
+  <div class="tabpane" data-pane="b4" hidden><h4>Enhanced accessibility &amp; inclusion</h4><div class="flow"><span>Adapt</span><b>→</b><span>Translate</span><b>→</b><span>Simplify</span><b>→</b><span>Include</span></div><ul class="clean"><li>Adapting content to different learning and accessibility needs</li><li>Translating and simplifying complex information</li><li>Supporting multilingual communication</li><li>Generating content adapted to local language and cultural context</li><li>Creating alternative formats: text, audio, visual, simplified</li></ul></div>
+  <div class="tabpane" data-pane="b5" hidden><h4>Elevated public service quality</h4><ul class="clean"><li>Personalising interactions based on user needs and context</li><li>Conversational access to information and services</li><li>Clear, simplified and multilingual content</li><li>24/7 self-service for routine inquiries</li><li>Helping employees find, summarise and respond to information</li><li>More consistent and accessible digital services</li></ul><p><b>Applications in the KSA:</b> healthcare (patient-facing information and navigation), education (personalised learning), social services (service guidance), legal services (document assistance).</p></div>
+  <div class="key warn"><span class="ic">!</span><p><strong>AI-assisted ≠ AI-autonomous.</strong> Human oversight, verification, privacy and governance remain essential.</p></div>
+
+  <h3>What are large language models?</h3>
+  <blockquote class="def">LLMs are large-scale AI models trained on extensive collections of text and other language data to learn patterns in human language and generate coherent responses.</blockquote>
+  <div class="grid2">
+    <div class="panel wash"><h4>How it works</h4><div class="flow"><span>Language data</span><b>→</b><span>Large-scale training</span><b>→</b><span>Learned patterns</span></div><div class="flow"><span>User prompt</span><b>→</b><span>LLM</span><b>→</b><span>Generated response</span></div><p>Examples: GPT, Gemini, LLaMA. Tasks: answer, summarise, translate, write, code, transform.</p></div>
+    <div class="panel" style="border-color:var(--amber)"><h4>LLM ≠ search engine</h4><p>An LLM generates responses from learned patterns and whatever is available through its context and connected tools. It does not automatically have internet access or up-to-date information unless a tool or retrieval system is provided.</p></div>
+  </div>
+
+  <h3>Applications of LLMs in medicine</h3>
+  <div class="grid3">
+    <div class="panel"><h4>1 · Educate</h4><p>Explain concepts; practice questions and clinical scenarios; exam prep; simulated patient–clinician conversations.</p></div>
+    <div class="panel"><h4>2 · Inform</h4><p>Summarise papers and guidelines; extract key findings; answer from provided or trusted sources; organise large volumes of information.</p></div>
+    <div class="panel"><h4>3 · Document</h4><p>Draft and summarise clinical notes; structure unstructured text; support coding workflows; assist report drafting.</p></div>
+    <div class="panel"><h4>4 · Communicate</h4><p>Translate health content; patient-friendly explanations; multilingual communication; clarity and readability.</p></div>
+    <div class="panel"><h4>5 · Support decisions</h4><p>Organise patient information; explore considerations; differential-diagnosis reasoning. <b>Supports, but does not replace, clinical judgment.</b></p></div>
+    <div class="panel"><h4>6 · Augment workflows</h4><p>Generate and transform content; information extraction; administrative communication; generate or explain code.</p></div>
+  </div>
+  <div class="eq">Generate ≠ Verify &nbsp;|&nbsp; Assist ≠ Decide &nbsp;|&nbsp; Human oversight remains essential</div>
+  <div class="complete" data-complete="3"></div>
+</div>
+</section>
+<!-- ================= M4 ================= -->
+<section class="section" id="m4" data-mod="4">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--s4)">4</div><div><h2>Prompt engineering</h2><p>Designing better instructions, improving them one requirement at a time, and remembering that a better prompt is not a guaranteed truth.</p><div class="mod-meta">Slides 27–46 · includes Activity A1 and the model-comparison tutorial</div></div></div>
+
+  <blockquote class="def">Prompt engineering is the systematic process of designing, structuring, and refining instructions to guide a Generative AI system toward a desired output.</blockquote>
+  <div class="grid2">
+    <div class="panel"><h4>Why it matters</h4><ul class="clean ok"><li>Reduces ambiguity and vague responses</li><li>Improves relevance and structure of outputs</li><li>Makes responses easier to evaluate and verify</li><li>Adapts outputs to an audience, task or purpose</li><li>Supports more consistent human–AI interaction</li></ul></div>
+    <div class="panel wash"><h4>Applications in healthcare</h4><p><b>Medical education:</b> explanations, summaries, practice questions.<br><b>Research:</b> literature organisation, information extraction.<br><b>Documentation:</b> drafting and restructuring text.<br><b>Communication:</b> adapting information for different audiences.</p></div>
+  </div>
+  <div class="key"><span class="ic">✓</span><p>Prompt engineering is not about asking AI more questions. It is about designing better instructions and systematically evaluating the results.</p></div>
+
+  <h3>Six common prompting techniques</h3>
+  <div class="tabs" role="tablist" data-tabs="tech">
+    <button role="tab" aria-selected="true" data-tab="t1">Zero-shot</button>
+    <button role="tab" aria-selected="false" data-tab="t2">Few-shot</button>
+    <button role="tab" aria-selected="false" data-tab="t3">Structured reasoning</button>
+    <button role="tab" aria-selected="false" data-tab="t4">Role</button>
+    <button role="tab" aria-selected="false" data-tab="t5">Instruction</button>
+    <button role="tab" aria-selected="false" data-tab="t6">Context</button>
+  </div>
+  <div class="tabpane" data-pane="t1"><p><b>Instruction only.</b> No examples are provided; the model responds from the instruction and its learned capabilities.</p><div class="out" style="min-height:0">“List the major risk factors for stroke.”</div><p class="muted" style="margin-top:8px">Best for straightforward questions and well-defined tasks.</p></div>
+  <div class="tabpane" data-pane="t2" hidden><p><b>Instruction + examples.</b> A few examples demonstrate the expected pattern, style or format, so the model can infer what is expected.</p><div class="out" style="min-height:0">Q: What is diabetes?
+A: A condition characterised by elevated blood glucose.
+Q: What is hypertension?
+A: ?</div><p class="muted" style="margin-top:8px">Best for classification, formatting, style adaptation and consistent responses.</p></div>
+  <div class="tabpane" data-pane="t3" hidden><p><b>Instruction + criteria or steps.</b> Ask for a concise, verifiable explanation or explicit solution steps, not the model’s private internal reasoning.</p><div class="out" style="min-height:0">“For this educational case, identify the relevant findings, list the clinical criteria that should be considered, and explain the conclusion briefly.”</div><p class="muted" style="margin-top:8px">Best for complex educational problems. The example is deliberately an educational case, not a live clinical decision.</p></div>
+  <div class="tabpane" data-pane="t4" hidden><p><b>Role sets the perspective:</b> expertise level, audience and communication style.</p><div class="out" style="min-height:0">“Act as a medical ethics educator. Explain to first-year medical students why patient confidentiality is essential in clinical practice.”</div><div class="key warn"><span class="ic">!</span><p>A role does not make the AI a qualified professional.</p></div></div>
+  <div class="tabpane" data-pane="t5" hidden><p><b>Instruction defines the task:</b> clear, specific directions about what to do and how to present it (length, format, scope, style).</p><div class="out" style="min-height:0">“Explain the difference between Type 1 and Type 2 diabetes in no more than 100 words. Use a simple comparison and highlight two key differences.”</div></div>
+  <div class="tabpane" data-pane="t6" hidden><p><b>Context provides the situation:</b> relevant background so the AI can respond appropriately to the task and audience.</p><div class="out" style="min-height:0">“A 65-year-old patient with diabetes is being discussed in a classroom case. Explain the major categories of information a clinician would consider when evaluating chest pain. Do not provide a diagnosis or treatment recommendation.”</div></div>
+  <div class="eq">Role + Instruction + Context → more relevant, better-structured output → verify</div>
+
+  <h3>What a good prompt carries</h3>
+  <div class="chips"><span class="chip t">Context</span><span class="chip t">Task</span><span class="chip t">Constraints</span><span class="chip t">Audience</span><span class="chip t">Format</span><span class="chip t">Examples</span><span class="chip t">Desired outcome</span></div>
+  <div class="grid2">
+    <div class="panel" style="border-color:var(--red)"><h4>Weak prompt</h4><p class="def" style="font-size:1.1rem;margin:6px 0">“Explain diabetes.”</p><p class="muted">Too open: the AI does not know for whom, why, how much, or in what format.</p></div>
+    <div class="panel" style="border-color:var(--green)"><h4>Better prompt</h4><p class="def" style="font-size:1.05rem;margin:6px 0">“I am a first-year medical student revising for an MCQ. Explain Type 1 vs Type 2 diabetes in under 150 words as a two-column table, with one exam-style question at the end.”</p><p class="muted">Who: first-year student · Why: MCQ revision · What: Type 1 vs Type 2 · How much: ≤150 words · Format: table + question</p></div>
+  </div>
+  <div class="key"><span class="ic">✓</span><p>Don’t just ask AI what you want. Tell it what a useful answer looks like. The goal is not a longer prompt; it is the right information.</p></div>
+
+  <h3>CTCO: a prompt frame you can remember</h3>
+  <p class="prose">Before you press Enter, give AI four things. <b>Task</b> tells AI what to do; <b>Output</b> tells AI what the result should look like. Build one now for the cell membrane (the class exercise, 2 minutes).</p>
+  <div class="builder panel">
+    <div>
+      <div class="field"><label for="cC">Context <i>who am I, what do I know, why am I asking?</i></label><input id="cC" placeholder="I am a first-year medical student revising cell biology."></div>
+      <div class="field"><label for="cT">Task <i>one clear action verb</i></label><input id="cT" placeholder="Explain how the cell membrane controls movement of substances."></div>
+      <div class="field"><label for="cK">Constraints <i>limits or requirements</i></label><input id="cK" placeholder="Use simple medical language, stay under 150 words."></div>
+      <div class="field"><label for="cO">Output <i>what should the answer look like?</i></label><input id="cO" placeholder="Five bullet points followed by one MCQ."></div>
+      <button class="btn sm" id="ctcoEx">Fill with the lecture example</button> <button class="btn sm ghost" id="ctcoClr">Clear</button>
+    </div>
+    <div>
+      <div class="meter" id="ctcoMeter"><span>Context</span><span>Task</span><span>Constraints</span><span>Output</span></div>
+      <div class="out" id="ctcoOut">Your prompt will appear here as you type.</div>
+      <div style="margin-top:10px;display:flex;gap:8px"><button class="btn sm primary" id="ctcoCopy">Copy prompt</button><span class="feedback" id="ctcoFb"></span></div>
+    </div>
+  </div>
+
+  <h4 style="margin-top:26px">CTCO and the 8Rs</h4>
+  <p class="prose">CTCO provides the everyday structure; the 8Rs you learned before add depth when the task requires it.</p>
+  <div class="tscroll"><table class="t">
+    <tr><th>CTCO element</th><th>8Rs that add depth</th></tr>
+    <tr><td>C: Context</td><td>Role, Relevance</td></tr>
+    <tr><td>T: Task</td><td>Requests</td></tr>
+    <tr><td>C: Constraints</td><td>Rules</td></tr>
+    <tr><td>O: Output</td><td>Requests, Replica</td></tr>
+    <tr><td>For research tasks, when needed</td><td>Resources, References, Re-evaluation</td></tr>
+  </table></div>
+
+  <h3>“Explain diabetes”: improving it step by step</h3>
+  <p class="prose">Drag the slider to add one requirement at a time. Notice the prompt gets clearer, not merely longer.</p>
+  <input type="range" class="range" id="ladderR" min="1" max="4" value="1" aria-label="Prompt version">
+  <div class="ladder" id="ladder">
+    <div class="rung on"><div class="v" style="background:var(--s2)">V1</div><div><q>Explain diabetes.</q><small>Too broad: no context, purpose, audience or format.</small></div></div>
+    <div class="rung"><div class="v" style="background:var(--s4)">V2</div><div><q>Explain the difference between Type 1 and Type 2 diabetes for a first-year medical student.</q><small>Focused: + audience, + task.</small></div></div>
+    <div class="rung"><div class="v" style="background:var(--s6)">V3</div><div><q>…in under 150 words, as a table with columns: cause, typical onset, and role of insulin.</q><small>Structured: + constraints, + output.</small></div></div>
+    <div class="rung"><div class="v" style="background:var(--s8)">V4</div><div><q>…Then add two MCQs with answers and identify the key textbook-level fact tested by each question.</q><small>Learning-oriented: + learning activity, + verification focus.</small></div></div>
+  </div>
+
+  <h3>A good prompt does not guarantee a correct answer</h3>
+  <p class="prose">This well-formatted table was produced by a well-structured prompt. One cell is wrong. Click the cell you think contains the error.</p>
+  <div class="tscroll" style="max-width:640px"><table class="t errtab" id="errTab">
+    <tr><th></th><th>Type 1</th><th>Type 2</th></tr>
+    <tr><th>Cause</th><td class="cell">Autoimmune β-cell loss</td><td class="cell">Insulin resistance</td></tr>
+    <tr><th>Typical onset</th><td class="cell">Often in childhood</td><td class="cell">Usually adulthood</td></tr>
+    <tr><th>Insulin</th><td class="cell">Absolute deficiency</td><td class="cell" data-bad="1">Not involved</td></tr>
+  </table></div>
+  <p class="feedback" id="errFb"></p>
+  <div class="grid2">
+    <div class="panel"><h4>Evidence: medical references generated by ChatGPT-3.5</h4>
+      <div class="bars">
+        <div class="barrow"><span>Fabricated</span><span class="track"><i style="width:47%;background:var(--red)"></i></span><b>47%</b></div>
+        <div class="barrow"><span>Real but inaccurate</span><span class="track"><i style="width:46%;background:var(--amber)"></i></span><b>46%</b></div>
+        <div class="barrow"><span>Real and accurate</span><span class="track"><i style="width:7%;background:var(--green)"></i></span><b>7%</b></div>
+      </div>
+      <p class="src">Bhattacharyya et al., Cureus, 2023. An early model; current systems perform better, but medical claims and references still require verification.</p></div>
+    <div class="panel wash"><h4>What prompt quality improves</h4><ul class="clean ok"><li><b>Relevance</b>: the answer stays tied to what you asked</li><li><b>Usefulness</b>: the output is more useful to you</li><li><b>Checkability</b>: easier to evaluate and verify</li></ul><p>But it does not automatically improve the model’s underlying knowledge.</p></div>
+  </div>
+  <div class="eq">Fluent ≠ Accurate · Structured ≠ Verified — Prompting improves the question. Verification protects the answer.</div>
+
+  <h3>One-shot vs iterative interaction</h3>
+  <p class="prose">Treat the first response as a draft and improve it one round at a time. Step through the acute-inflammation example.</p>
+  <div class="panel">
+    <div class="flow" id="iterFlow"></div>
+    <div class="out" id="iterOut" style="min-height:70px"></div>
+    <div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" id="iterPrev">Previous round</button><button class="btn sm primary" id="iterNext">Next round</button></div>
+  </div>
+  <div class="key"><span class="ic">✓</span><p>One interaction = one small improvement. Iterative prompting turns AI from an answer generator into a collaborative drafting partner.</p></div>
+
+  <div class="activity" id="actA1">
+    <div class="ah"><b>Activity A1 · Prompt improvement challenge</b><span>Pairs · 12 minutes · three rounds</span></div>
+    <div class="ab">
+      <p>Starting prompt: <b>“Tell me about the heart.”</b> Show the process, not a perfect first attempt. For each round: <b>Generate → Inspect → Identify a problem → Refine</b>.</p>
+      <div class="tscroll"><table class="t">
+        <tr><th>Round</th><th>Step</th><th>What you record</th></tr>
+        <tr><td rowspan="3">R1</td><td>Prompt 1</td><td>Your first improved prompt</td></tr><tr><td>Output 1</td><td>AI’s response</td></tr><tr><td>Problem 1</td><td>What is missing, unclear, or unhelpful?</td></tr>
+        <tr><td rowspan="3">R2</td><td>Prompt 2</td><td>A more specific prompt</td></tr><tr><td>Output 2</td><td>Improved response</td></tr><tr><td>Problem 2</td><td>What still needs improvement?</td></tr>
+        <tr><td rowspan="2">R3</td><td>Prompt 3</td><td>Your final refined prompt</td></tr><tr><td>Final output</td><td>Your best response</td></tr>
+      </table></div>
+      <p><b>Success criteria:</b> your final prompt shows Context + Task + Constraints + Output, and every refinement responds to a specific problem found in the previous output. <b>Deliverable:</b> the complete 8-row improvement record.</p>
+    </div>
+  </div>
+
+  <h3>A professional prompt-writing structure</h3>
+  <div class="tscroll"><table class="t">
+    <tr><th>#</th><th>Element</th><th>Question</th><th>Covers</th></tr>
+    <tr><td>1</td><td>Role</td><td>Who should the AI respond as?</td><td>Perspective, expertise level, audience</td></tr>
+    <tr><td>2</td><td>Task</td><td>What exactly should the AI do?</td><td>Action, objective, scope</td></tr>
+    <tr><td>3</td><td>Requirements</td><td>What should the response consider?</td><td>Clarity, specificity, structure, content, analysis</td></tr>
+    <tr><td>4</td><td>Resources / constraints</td><td>What information or limitations apply?</td><td>Sources, provided data, time, length, rules</td></tr>
+    <tr><td>5</td><td>Output format</td><td>How should the result be presented?</td><td>Table, bullets, steps, JSON, questions, report</td></tr>
+    <tr><td>6</td><td>Examples (optional)</td><td>What does a good response look like?</td><td>Example input → example output</td></tr>
+  </table></div>
+  <div class="eq">Professional prompt = Clear intent + Useful context + Explicit requirements + Verifiable output</div>
+  <div class="grid2">
+    <div class="panel"><h4>Example 1 · Clinical education prompt</h4><p><b>Role</b> Act as a family-medicine educator. <b>Context</b> A 25-year-old patient has fever, sore throat, and headache for three days. <b>Task</b> For an educational case, identify 2–3 possible categories of causes and explain which red-flag findings should be considered. <b>Constraints</b> Use clear, patient-friendly language. <b>Output</b> Possible causes → What to check → When to seek professional care. <b>Safety</b> Do not provide a diagnosis or individualised treatment.</p></div>
+    <div class="panel"><h4>Example 2 · Patient communication prompt</h4><p><b>Role</b> Act as a medical-education assistant. <b>Context</b> A 40-year-old patient reports stomach pain after meals. <b>Task</b> Explain the main categories of possible causes and what information or basic assessments a healthcare professional may consider. <b>Constraints</b> Simple, under 200 words. <b>Output</b> Clear bullet points. <b>Safety</b> Educational information only; do not diagnose or prescribe.</p></div>
+  </div>
+
+  <h3>Tutorial: compare AI models</h3>
+  <p class="prose">Write one prompt, run the same prompt and input on ChatGPT, Gemini and Claude, then score each response. Judge a prompt by its output, not by the prompt alone. Use synthetic or educational content only.</p>
+  <div class="grid3">
+    <div class="panel"><h4>ChatGPT <span class="muted mono" style="font-size:.8rem">chatgpt.com</span></h4><p>OpenAI’s assistant for reasoning, writing, learning, coding and research, extended by tools: web search, file and data analysis, image understanding and generation, deep research.</p></div>
+    <div class="panel"><h4>Gemini <span class="muted mono" style="font-size:.8rem">gemini.google.com</span></h4><p>Google DeepMind’s multimodal model family working across text, images, audio, video and code, integrated with Google’s ecosystem.</p></div>
+    <div class="panel"><h4>Claude <span class="muted mono" style="font-size:.8rem">claude.ai</span></h4><p>Anthropic’s model family for reasoning, writing, analysis, coding and research; analyses files, searches the web, runs code, and creates interactive Artifacts.</p></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h4>Evaluation rubric · score each model 1–5</h4>
+    <div class="tscroll" style="margin:8px 0"><table class="t" id="rubric"></table></div>
+    <p class="feedback" id="rubricFb">Score the responses to see which model produced the most useful answer. Then justify your judgement with evidence.</p>
+  </div>
+  <div class="key warn"><span class="ic">!</span><p>Capabilities vary by version, task and context. Compare actual outputs, not reputations; no model is best for every task.</p></div>
+
+  <h3>Let the AI design the prompt for you</h3>
+  <p class="prose">Instead of writing a complex prompt from scratch, ask the LLM to act as a prompt engineer and create, critique and improve the prompt before you use it.</p>
+  <div class="ladder">
+    <div class="rung on"><div class="v" style="background:var(--s3)">1</div><div><b>Describe your goal</b><q>I need to create a prompt that helps me summarise medical research papers for first-year medical students.</q></div></div>
+    <div class="rung on"><div class="v" style="background:var(--s5)">2</div><div><b>Ask it to build the prompt</b><q>Act as an expert Prompt Engineer. Create a professional, reusable prompt for this task. Include the role, objective, context, instructions, constraints, output format, quality criteria, and placeholders for information I can change.</q></div></div>
+    <div class="rung on"><div class="v" style="background:var(--s6)">3</div><div><b>Ask it to improve the prompt</b><q>Review the prompt you created. Identify ambiguity, missing information, unnecessary instructions, and potential risks. Then provide an improved version.</q></div></div>
+    <div class="rung on"><div class="v" style="background:var(--s8)">4</div><div><b>Ask for a reusable template</b><q>Convert the final prompt into a reusable template with clearly marked [PLACEHOLDERS] and provide one completed example.</q></div></div>
+  </div>
+  <details class="qc"><summary>See the LLM-generated professional prompt</summary><div class="ans">
+    <p><b style="color:var(--ink)">Role:</b> Act as a medical education assistant specialising in evidence-based learning.<br>
+    <b style="color:var(--ink)">Task:</b> Summarise the provided medical research paper for first-year medical students.<br>
+    <b style="color:var(--ink)">Instructions:</b> Identify the research question and main objective. Summarise methodology and key findings. Explain results in simple academic language. Define important terms. Distinguish reported findings from interpretations. Do not introduce information unsupported by the paper.<br>
+    <b style="color:var(--ink)">Constraints:</b> First-year level; 300–400 words; preserve scientific terminology; no patient-specific advice.<br>
+    <b style="color:var(--ink)">Output:</b> 1 Research question · 2 Objective · 3 Methodology · 4 Key findings · 5 Significance · 6 Important terms · 7 Three review questions.<br>
+    <b style="color:var(--ink)">Quality check:</b> Verify every major claim is supported by the paper and flag anything that cannot be determined from the source.</p>
+    <p>Final step: give it a real paper and ask: “Apply the prompt to this paper and identify any part of the prompt that should be improved.”</p></div></details>
+  <div class="flow"><span>Goal</span><b>→</b><span>Draft</span><b>→</b><span>Critique</span><b>→</b><span>Improve</span><b>→</b><span>Template</span><b>→</b><span>Test</span><b>→</b><span>Refine</span></div>
+  <div class="complete" data-complete="4"></div>
+</div>
+</section>
+<!-- ================= M5 ================= -->
+<section class="section" id="m5" data-mod="5">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--s5)">5</div><div><h2>Generative AI tools</h2><p>Why the model is not the tool, why tools change everything, and a hands-on gallery of the tools used in class.</p><div class="mod-meta">Slides 47–81 · Activities 2–15</div></div></div>
+
+  <h3 style="margin-top:0">The model is not the tool</h3>
+  <div class="grid2">
+    <div>
+      <div class="tscroll"><table class="t">
+        <tr><th>Model</th><th>Tool</th></tr>
+        <tr><td>Generates and processes language based on learned parameters and available context</td><td>Provides an external capability the AI system can call when needed</td></tr>
+        <tr><td>Produces and transforms information</td><td>Performs a specific action or retrieves information</td></tr>
+        <tr><td>Does not automatically have access to external systems</td><td>Gives access to search, calculation, databases, files, APIs and other services</td></tr>
+      </table></div>
+    </div>
+    <div class="panel wash"><h4>Healthcare analogy</h4><p>A clinician understands blood pressure but needs a cuff to measure it. An AI model may explain a calculation; a calculator tool performs it.</p>
+      <div class="flow"><span>Understands</span><b>→</b><span>Uses instrument</span><b>→</b><span>Gets measurement</span></div>
+      <p style="margin-top:10px"><b>“What is the current WHO recommendation?”</b><br>Model alone: may answer from learned knowledge.<br>Model + search tool: can retrieve current information from an external source.</p></div>
+  </div>
+  <details class="qc"><summary>If ChatGPT gives you today’s weather, did the model go outside and measure it?</summary><div class="ans"><b>No.</b> The system used a search or weather tool connected to the model. The model provides the intelligence; the tool provides the external capability. Current information requires an appropriate external source or tool.</div></details>
+
+  <h3>Common tools an AI assistant can use</h3>
+  <div class="flipgrid" id="toolCards"></div>
+
+  <h3>Why tools change everything</h3>
+  <div class="grid2">
+    <div class="panel"><h4>Without tools, AI talks</h4><ul class="clean"><li>Generates and transforms information</li><li>Works within the available context</li><li>Cannot directly perform external actions</li><li>Output is primarily informational</li></ul></div>
+    <div class="panel"><h4>With tools, AI acts</h4><ul class="clean"><li>Retrieves external information</li><li>Accesses files, databases and services</li><li>Can calculate, analyse, write, send or update</li><li>Output can affect external systems</li></ul></div>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="key" style="margin:0"><span class="ic">1</span><p><b>More checkability.</b> A search, calculation or database query can provide evidence or a traceable source.</p></div>
+    <div class="key stop" style="margin:0"><span class="ic">2</span><p><b>More consequence.</b> If AI can write, send, modify or trigger an action, an error can become a real-world consequence.</p></div>
+  </div>
+  <div class="flow" style="margin-top:14px"><span>Information</span><b>→</b><span>Evidence</span><b>→</b><span>Action</span><b>→</b><span class="hl">Consequence</span></div>
+
+  <h3>Tool gallery</h3>
+  <p class="prose">Filter by purpose, then open any tool for its capabilities, a suggested workflow, the in-class activity, and the caution that comes with it.</p>
+  <div class="filters" id="toolFilters"></div>
+  <div class="tools" id="toolGrid"></div>
+  <dialog id="toolDlg"><div class="dlg-h"><div><h3 id="dT"></h3><div class="mono muted" id="dU" style="font-size:.85rem"></div></div><button class="btn sm" id="dClose">Close</button></div><div class="dlg-b" id="dB"></div></dialog>
+
+  <h3>Hands-on activities in this module</h3>
+  <div class="checklist grid2" id="actList"></div>
+  <div class="key stop"><span class="ic">!</span><p>Upload only non-identifiable, educational material. AI-assisted writing ≠ AI-authored work: always review, verify, cite, and take responsibility for the final text.</p></div>
+  <div class="complete" data-complete="5"></div>
+</div>
+</section>
+
+<!-- ================= M6 ================= -->
+<section class="section" id="m6" data-mod="6">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--s6)">6</div><div><h2>Skills and the Challenger</h2><p>From giving AI instructions once to giving it a reusable capability, and using a Skill to test claims instead of confirming them.</p><div class="mod-meta">Slides 82–92 · Activity A2 and the Claude Skill exercise</div></div></div>
+
+  <blockquote class="def">A Skill is a reusable capability that tells an AI system how to perform a particular type of task consistently.</blockquote>
+  <div class="grid3">
+    <div class="panel"><h4>The recipe · Skill</h4><p>Instructions + rules + criteria. Defines how the task should be performed.</p></div>
+    <div class="panel"><h4>The cook · Model</h4><p>Interprets and applies the Skill; generates and processes information.</p></div>
+    <div class="panel"><h4>The oven · Tool</h4><p>Provides an external capability or action when needed.</p></div>
+  </div>
+  <div class="eq">Skill = <em>how</em> to do the task &nbsp;·&nbsp; Tool = <em>what</em> the AI can use to do it</div>
+  <p class="prose muted">Implementation differs across products: a skill file, custom instructions, a configured GPT, a Gem or similar reusable configuration. The idea is the same: package instructions, rules, examples and resources for a repeatable task.</p>
+
+  <h3>Anatomy of a Skill: the eleven-field template</h3>
+  <p class="prose">A prompt asks AI to perform a task once. A Skill defines a reusable method for performing it consistently. Fill the template below; the specification is assembled for you to copy into Claude, a GPT, or a Gem.</p>
+  <div class="panel">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><span class="muted" style="align-self:center">Start from:</span><button class="btn sm" data-skill="summ">Lecture Summarizer</button><button class="btn sm" data-skill="quiz">Quiz Generator</button><button class="btn sm" data-skill="expl">Concept Explainer</button><button class="btn sm" data-skill="rev">Document Reviewer</button><button class="btn sm" data-skill="evid">Evidence Organizer</button><button class="btn sm ghost" data-skill="clear">Blank</button></div>
+    <div class="skillgrid" id="skillForm"></div>
+    <div style="margin-top:14px"><div class="meter" id="skillMeter" style="grid-template-columns:repeat(11,1fr)"></div><div class="out" id="skillOut" style="font-family:var(--mono);font-size:.85rem"></div>
+    <div style="margin-top:10px;display:flex;gap:8px;align-items:center"><button class="btn sm primary" id="skillCopy">Copy Skill</button><span class="feedback" id="skillFb"></span></div></div>
+  </div>
+  <p class="muted" style="margin-top:8px">Memory line: identity → input → method → limits → output → quality → failure → example.</p>
+
+  <h3>What makes a Skill good?</h3>
+  <div class="grid2">
+    <div>
+      <ul class="clean ok">
+        <li><b>One clear task</b> (focused): one Skill, one main purpose</li>
+        <li><b>Instructions anyone could follow</b> (explicit): not dependent on the creator’s assumptions</li>
+        <li><b>A clear output shape</b> (structured): e.g. Summary → Key concepts → 3 review questions</li>
+        <li><b>A failure condition</b> (bounded): “If the input is not lecture notes, stop and state that it is outside the Skill’s scope.”</li>
+        <li><b>An example</b> (demonstrated): show the expected behaviour</li>
+      </ul>
+    </div>
+    <div class="panel" style="border-color:var(--red)"><h4>Spot the problem</h4><p class="def" style="font-size:1.05rem;margin:4px 0 10px">“Help students learn biology and summarise lectures and make questions and explain difficult topics.”</p>
+      <details class="qc" style="margin:0"><summary>What is wrong with it?</summary><div class="ans">It bundles four unrelated tasks, gives no instructions, no output shape, no stopping condition and no example. Fix it by asking: What is the one task? What instructions are missing? What should the output look like? When should it stop? What example would clarify it?</div></details></div>
+  </div>
+  <div class="eq">Good Skill = Focused + Explicit + Structured + Bounded + Demonstrated</div>
+
+  <div class="activity">
+    <div class="ah"><b>Activity A2 · Build your first AI Skill</b><span>Pairs · 20 minutes · healthcare education only</span></div>
+    <div class="ab"><ol><li><b>Design:</b> complete all 11 fields of the template.</li><li><b>Test:</b> run your Skill on one realistic input.</li><li><b>Inspect:</b> examine the output carefully.</li><li><b>Identify one failure:</b> missing info, unclear output, wrong format, ignored constraint, or wrong level.</li><li><b>Fix:</b> modify the relevant field(s), run again, record the improvement.</li></ol>
+    <p><b>Swap:</b> Pair A gives its Skill to Pair B, who test it as users (without rewriting) and report what worked, what failed and what should change. No diagnosis and no patient-specific clinical decisions.</p></div>
+  </div>
+
+  <h3>The Challenger Skill: stop AI from simply agreeing</h3>
+  <p class="prose">Assistants are tuned to be helpful and cooperative. A Challenger Skill asks AI to test a claim instead of confirming it: not “Why am I right?” but “What would make me wrong?”. Step through the nine moves.</p>
+  <div class="panel">
+    <div class="flow" id="chalFlow"></div>
+    <div class="out" id="chalOut" style="min-height:90px"></div>
+    <div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" id="chalPrev">Previous move</button><button class="btn sm primary" id="chalNext">Next move</button></div>
+  </div>
+  <div class="key warn"><span class="ic">!</span><p>The Challenger is a critical-thinking tool, not a truth detector. Its output still needs verification.</p></div>
+
+  <h4 style="margin-top:22px">Challenger in action: “AI will replace doctors”</h4>
+  <p class="prose">Instead of asking “Is this true?”, the Challenger decomposes the claim into five questions.</p>
+  <div class="grid3">
+    <div class="panel"><h4>Which assumptions?</h4><p>What must be true for the claim to hold?</p></div>
+    <div class="panel"><h4>Which tasks?</h4><p>Which parts of medical work are actually being discussed?</p></div>
+    <div class="panel"><h4>What evidence?</h4><p>What supports or contradicts the claim?</p></div>
+    <div class="panel"><h4>What limitations?</h4><p>Technical, human, organisational or regulatory constraints.</p></div>
+    <div class="panel"><h4>What alternatives?</h4><p>What other futures or interpretations are possible?</p></div>
+    <div class="panel wash"><h4>Pair challenge</h4><p>Challenge one belief: “AI always saves time”, “More data always produces better AI”, “AI is objective”, “AI will make learning easier”, “Confident-sounding AI is reliable”.</p></div>
+  </div>
+  <div class="flow"><span>Claim</span><b>→</b><span>Assumptions</span><b>→</b><span>Challenges</span><b>→</b><span>Evidence needed</span><b>→</b><span>Alternative scenarios</span><b>→</b><span class="tl">What would change my mind?</span></div>
+
+  <h4 style="margin-top:22px">Challenger agents</h4>
+  <p class="prose">A Challenger Skill can be assigned to a second agent that reviews and stress-tests the first. Example: the main agent creates an exam study plan; the Challenger asks “What important topics, learning outcomes or weak areas are missing?”; the main agent revises.</p>
+  <div class="flow"><span>Plan</span><b>→</b><span>Challenge</span><b>→</b><span>Revise</span><b>→</b><span>Recheck ↺</span></div>
+  <div class="key"><span class="ic">i</span><p>The Challenger is not another source of truth. It is a second layer of scrutiny.</p></div>
+
+  <div class="activity">
+    <div class="ah"><b>Exercise · Build a healthcare education Skill in Claude</b><span>Pairs · 10 minutes</span></div>
+    <div class="ab"><p><b>Scenario:</b> Claude as a Medical Education Summarizer for first-year students, turning lecture notes into a concise study guide. Include role, input, task, constraints, output and quality check. Output must be: key concepts → simple explanation → important terms → 3 review questions.</p>
+    <p class="muted">Suggested input: “Inflammation is a protective response to tissue injury or infection. Acute inflammation involves vascular changes and recruitment of leukocytes to the affected tissue…”</p>
+    <details class="qc"><summary>Reveal the model solution</summary><div class="ans">
+      <p><b style="color:var(--ink)">Role:</b> Act as a medical education assistant for first-year medical students.<br><b style="color:var(--ink)">Input:</b> Lecture notes or educational text provided by the student.<br><b style="color:var(--ink)">Task:</b> Transform the material into a concise, accurate study guide, preserving essential concepts and terminology.<br><b style="color:var(--ink)">Constraints:</b> Clear first-year language · no information unsupported by the provided text · preserve scientific terminology · keep it concise · no diagnosis or treatment recommendations.<br><b style="color:var(--ink)">Output:</b> 1 Key concepts (3–5) · 2 Simple explanation · 3 Important terms (term / meaning) · 4 Three review questions that test understanding, not memorisation.<br><b style="color:var(--ink)">Quality check:</b> Are key concepts supported by the source? Has any meaning changed? Are explanations right for first-year students? Are the questions answerable from the material?</p>
+      <p>Discuss: what would you change to make it more useful? (e.g. word limits per section, page references to the notes, a “common misconceptions” section, adaptation for Arabic-speaking students.)</p></div></details></div>
+  </div>
+  <div class="complete" data-complete="6"></div>
+</div>
+</section>
+<!-- ================= M7 ================= -->
+<section class="section" id="m7" data-mod="7">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--s7)">7</div><div><h2>Connecting AI: API and MCP</h2><p>How software talks to software, and the standard that lets AI applications connect to tools and resources.</p><div class="mod-meta">Slides 93–103 · Activities A4 and A5</div></div></div>
+
+  <h3 style="margin-top:0">API: how software talks to software</h3>
+  <p class="prose"><b>API = Application Programming Interface.</b> An API defines how one software system can request a capability or data from another. You do not enter the kitchen; you use the interface provided to request what you need.</p>
+  <div class="grid2">
+    <div class="tscroll" style="margin:0"><table class="t">
+      <tr><th>Restaurant</th><th>Software</th></tr>
+      <tr><td>You</td><td>Client / application</td></tr><tr><td>Menu</td><td>Available API operations</td></tr><tr><td>Kitchen</td><td>Service / system</td></tr><tr><td>Waiter</td><td>API</td></tr><tr><td>Order</td><td>Request</td></tr><tr><td>Prepared meal</td><td>Response</td></tr>
+    </table></div>
+    <div>
+      <div class="flow"><span>Client</span><b>→ request →</b><span class="tl">API</span><b>→</b><span>Service</span></div>
+      <div class="flow"><span>Client</span><b>← response ←</b><span class="tl">API</span><b>←</b><span>Service</span></div>
+      <details class="qc"><summary>What is the “menu” in our restaurant analogy?</summary><div class="ans"><b>The set of operations the API makes available</b>: search, retrieve data, create a record, update information, or perform a calculation.</div></details>
+    </div>
+  </div>
+
+  <h4 style="margin-top:24px">Six API words you will hear</h4>
+  <p class="muted">Recognition, not programming. Tap each card.</p>
+  <div class="flipgrid" id="apiCards"></div>
+  <div class="grid2">
+    <div class="out" style="font-family:var(--mono);font-size:.88rem;min-height:0">// Request
+{
+  "topic": "cell membrane",
+  "level": "first-year"
+}</div>
+    <div class="out" style="font-family:var(--mono);font-size:.88rem;min-height:0">// Response
+{
+  "summary": "..."
+}</div>
+  </div>
+  <p class="muted" style="margin-top:8px">Memory: Where? → What? → Details? → Who? → Result? → Format?</p>
+
+  <h4 style="margin-top:24px">Three API examples, one pattern</h4>
+  <div class="tscroll"><table class="t">
+    <tr><th>Problem</th><th>Client</th><th>API request</th><th>API response</th><th>What you learn</th></tr>
+    <tr><td>“What is the current weather?”</td><td>Weather app</td><td>City / location</td><td>Current conditions</td><td>APIs can retrieve external, current data</td></tr>
+    <tr><td>“Is this drug name spelled correctly?” (reference lookup, not prescribing)</td><td>Education app</td><td>Drug name</td><td>Match / no match + entry</td><td>APIs can query a specialised data source</td></tr>
+    <tr><td>“Translate this paragraph.”</td><td>Student application</td><td>Text + target language</td><td>Translated text</td><td>APIs can request a processing service</td></tr>
+  </table></div>
+
+  <div class="activity">
+    <div class="ah"><b>Activity A4 · Map a fourth example</b><span>Pairs · 4 minutes</span></div>
+    <div class="ab">
+      <p>“A student wants to search a university library catalogue for books about AI.” Choose the right entry for each box, then check.</p>
+      <div class="grid3" id="a4"></div>
+      <div style="margin-top:10px;display:flex;gap:10px;align-items:center"><button class="btn sm primary" id="a4Check">Check my mapping</button><span class="feedback" id="a4Fb"></span></div>
+    </div>
+  </div>
+
+  <h3>The problem MCP solves</h3>
+  <p class="prose"><b>MCP = Model Context Protocol</b>: an open protocol designed to standardise how AI applications connect with external tools, resources and contextual information.</p>
+  <div class="grid2">
+    <div class="panel"><h4>Without a standard</h4><svg viewBox="0 0 300 150" role="img" aria-label="Three apps each wired separately to five tools"><g stroke="var(--red)" stroke-width="1.3" opacity=".6">
+      <line x1="40" y1="30" x2="260" y2="15"/><line x1="40" y1="30" x2="260" y2="45"/><line x1="40" y1="30" x2="260" y2="75"/><line x1="40" y1="30" x2="260" y2="105"/><line x1="40" y1="30" x2="260" y2="135"/>
+      <line x1="40" y1="75" x2="260" y2="15"/><line x1="40" y1="75" x2="260" y2="45"/><line x1="40" y1="75" x2="260" y2="75"/><line x1="40" y1="75" x2="260" y2="105"/><line x1="40" y1="75" x2="260" y2="135"/>
+      <line x1="40" y1="120" x2="260" y2="15"/><line x1="40" y1="120" x2="260" y2="45"/><line x1="40" y1="120" x2="260" y2="75"/><line x1="40" y1="120" x2="260" y2="105"/><line x1="40" y1="120" x2="260" y2="135"/></g>
+      <g fill="var(--navy)"><rect x="10" y="18" width="40" height="24" rx="5"/><rect x="10" y="63" width="40" height="24" rx="5"/><rect x="10" y="108" width="40" height="24" rx="5"/></g>
+      <g fill="var(--s3)"><circle cx="266" cy="15" r="9"/><circle cx="266" cy="45" r="9"/><circle cx="266" cy="75" r="9"/><circle cx="266" cy="105" r="9"/><circle cx="266" cy="135" r="9"/></g></svg>
+      <p class="muted">More tools → more custom wiring → more complexity.</p></div>
+    <div class="panel"><h4>With MCP</h4><svg viewBox="0 0 300 150" role="img" aria-label="Three apps connect through one standard to five tools"><g stroke="var(--teal)" stroke-width="1.6">
+      <line x1="50" y1="30" x2="150" y2="75"/><line x1="50" y1="75" x2="150" y2="75"/><line x1="50" y1="120" x2="150" y2="75"/>
+      <line x1="150" y1="75" x2="260" y2="15"/><line x1="150" y1="75" x2="260" y2="45"/><line x1="150" y1="75" x2="260" y2="75"/><line x1="150" y1="75" x2="260" y2="105"/><line x1="150" y1="75" x2="260" y2="135"/></g>
+      <g fill="var(--navy)"><rect x="10" y="18" width="40" height="24" rx="5"/><rect x="10" y="63" width="40" height="24" rx="5"/><rect x="10" y="108" width="40" height="24" rx="5"/></g>
+      <rect x="122" y="58" width="56" height="34" rx="8" fill="var(--teal)"/><text x="150" y="80" text-anchor="middle" fill="#fff" font-family="IBM Plex Sans,sans-serif" font-weight="600" font-size="13">MCP</text>
+      <g fill="var(--s3)"><circle cx="266" cy="15" r="9"/><circle cx="266" cy="45" r="9"/><circle cx="266" cy="75" r="9"/><circle cx="266" cy="105" r="9"/><circle cx="266" cy="135" r="9"/></g></svg>
+      <p class="muted">One standard → many possible connections. Think of a universal connection standard (an analogy, not a literal equivalence).</p></div>
+  </div>
+  <div class="key"><span class="ic">i</span><p>MCP is not the tool. It is the standardised communication layer between an AI application and its tools.</p></div>
+
+  <h3>Host, client, server</h3>
+  <div class="tscroll"><table class="t">
+    <tr><th>MCP role</th><th>What it is</th><th>Mental model</th></tr>
+    <tr><td>Host</td><td>The AI application the user interacts with</td><td>The workplace</td></tr>
+    <tr><td>Client</td><td>The component inside the Host that communicates using MCP</td><td>The connector</td></tr>
+    <tr><td>Server</td><td>A local or remote program that exposes Tools, Resources and Prompts</td><td>The provider</td></tr>
+  </table></div>
+  <div class="flow"><span>User</span><b>→</b><span>Host ⟨Client⟩</span><b>⇄ MCP ⇄</b><span>MCP Server</span><b>→</b><span>Files · Database · Calendar · Search</span></div>
+  <div class="key warn"><span class="ic">!</span><p>Before you click “Connect”, know which tools and resources you are granting access to. A “server” is not necessarily a remote cloud server.</p></div>
+
+  <h3>Tools, resources and prompts</h3>
+  <div class="grid3">
+    <div class="panel"><h4>Tool · Do</h4><p>AI can <b>do</b> something: search, create, send.</p></div>
+    <div class="panel"><h4>Resource · Read</h4><p>AI can <b>read</b> something: files, tables, documents.</p></div>
+    <div class="panel"><h4>Prompt · Guide</h4><p>AI can <b>follow</b> a prepared instruction: analyse, summarise, report.</p></div>
+  </div>
+  <div class="activity">
+    <div class="ah"><b>Activity A5 · Identify the architecture</b><span>Pairs</span></div>
+    <div class="ab">
+      <p>“A medical education AI app connects through MCP to a university learning system. It can read course materials, search the question bank, and use a predefined prompt to generate a revision quiz.” Select a phrase, then select the role it plays.</p>
+      <div class="pool" id="a5pool"></div>
+      <div class="bins grid3" id="a5bins"></div>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:8px"><button class="btn sm primary" id="a5Check">Check</button><button class="btn sm ghost" id="a5Reset">Reset</button><span class="feedback" id="a5Fb"></span></div>
+    </div>
+  </div>
+
+  <h3>Six concepts: related, but not interchangeable</h3>
+  <div class="tscroll"><table class="t">
+    <tr><th>Concept</th><th>What it means</th><th>Simple question</th></tr>
+    <tr><td><b>API</b></td><td>An interface that allows software systems to communicate</td><td>How can software communicate?</td></tr>
+    <tr><td><b>MCP</b></td><td>A standard protocol for AI applications to connect with tools and resources</td><td>How can an AI application connect in a standardised way?</td></tr>
+    <tr><td><b>Tool</b></td><td>A capability the AI can invoke to perform an action or access a service</td><td>What can AI do?</td></tr>
+    <tr><td><b>Skill</b></td><td>A reusable set of instructions and rules for a type of task</td><td>How should AI perform the task?</td></tr>
+    <tr><td><b>Workflow</b></td><td>A predefined sequence of steps that produces an intended result</td><td>What steps happen, and in what order?</td></tr>
+    <tr><td><b>Agent</b></td><td>A goal-oriented AI system that plans and executes multiple steps, often using tools and adapting to results</td><td>How can AI pursue a goal across multiple steps?</td></tr>
+  </table></div>
+  <div class="panel wash"><h4>Quick poll</h4><p>An assistant reads my calendar through a connector. Is it using a Skill, a Tool via MCP, or an Agent?</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" id="poll1"><button class="btn sm" data-a="0">A Skill</button><button class="btn sm" data-a="1">A Tool via MCP</button><button class="btn sm" data-a="0">An Agent</button></div>
+    <p class="feedback" id="poll1Fb"></p></div>
+  <div class="eq">Tool ≠ Skill ≠ Workflow ≠ Agent &nbsp;&nbsp; API ≠ MCP</div>
+  <div class="complete" data-complete="7"></div>
+</div>
+</section>
+
+<!-- ================= M8 ================= -->
+<section class="section" id="m8" data-mod="8">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--s7)">8</div><div><h2>AI automation</h2><p>From a manual task to a controlled sequence of automated steps, and knowing when not to automate.</p><div class="mod-meta">Slides 104–110 · Activity A6 and the local automation lab</div></div></div>
+
+  <h3 style="margin-top:0">The automation pattern</h3>
+  <p class="prose">Every stage can fail. For higher-impact actions, the human check must be explicit. Put the eight stages in the right order by clicking them in sequence.</p>
+  <div class="panel">
+    <div class="pool" id="ordPool"></div>
+    <ol id="ordList" style="min-height:40px;margin:8px 0;padding-left:22px"></ol>
+    <div style="display:flex;gap:10px;align-items:center"><button class="btn sm ghost" id="ordReset">Reset</button><span class="feedback" id="ordFb"></span></div>
+  </div>
+  <div class="tscroll"><table class="t">
+    <tr><th>Stage</th><th>Question</th><th>Example: student submissions</th></tr>
+    <tr><td>1 Trigger</td><td>What starts the workflow?</td><td>New form submitted</td></tr>
+    <tr><td>2 Input</td><td>What information enters?</td><td>Student submission</td></tr>
+    <tr><td>3 Processing</td><td>What preparation is needed?</td><td>Extract text</td></tr>
+    <tr><td>4 AI</td><td>What does AI analyse or generate?</td><td>Classify the submission</td></tr>
+    <tr><td>5 Decision</td><td>What changes based on the result?</td><td>Assign category</td></tr>
+    <tr><td><b>6 Human check</b></td><td>What must be reviewed before action?</td><td><b>Instructor verifies</b></td></tr>
+    <tr><td>7 Action</td><td>What happens next?</td><td>Route to folder</td></tr>
+    <tr><td>8 Output</td><td>What is the final result?</td><td>Categorised submission</td></tr>
+  </table></div>
+  <div class="key stop"><span class="ic">!</span><p>No unchecked AI output should automatically trigger a consequential action. Design the check before the action, not after it.</p></div>
+  <details class="qc"><summary>Is an automated workflow necessarily an agent?</summary><div class="ans"><b>No.</b> An automated workflow follows a predefined sequence and does not become an agent simply because AI is one of its steps. An agent is given a goal and determines which steps to take, adapting to intermediate results.</div></details>
+
+  <h3>The AI automation cycle in healthcare</h3>
+  <div class="flow"><span>01 Input</span><b>→</b><span>02 Process</span><b>→</b><span>03 Decision support</span><b>→</b><span class="hl">04 Human check</span><b>→</b><span>05 Action</span><b>→</b><span>06 Monitor &amp; improve ↺</span></div>
+  <div class="grid4">
+    <div class="panel"><h4>Patient support</h4><p>Answer routine questions; assist appointment workflows.</p></div>
+    <div class="panel"><h4>Medical imaging</h4><p>Flag potentially abnormal findings for professional review.</p></div>
+    <div class="panel"><h4>Clinical monitoring</h4><p>Generate early-warning alerts from patient data.</p></div>
+    <div class="panel"><h4>Administration</h4><p>Support coding, billing, documentation and scheduling.</p></div>
+  </div>
+  <p class="muted" style="margin-top:10px">Many AI systems do not learn automatically from use; updates need retraining, evaluation, approval and revalidation. Automation does not remove human responsibility.</p>
+
+  <h3>When not to automate</h3>
+  <div class="grid4">
+    <div class="panel"><h4>The task is rare</h4><p>Little repetition, little value: cost and complexity may outweigh the benefit.</p></div>
+    <div class="panel"><h4>The thinking is the learning</h4><p>If you must develop the reasoning yourself, automating it undermines the objective.</p></div>
+    <div class="panel"><h4>Sensitive data is involved</h4><p>Keep restricted information out unless system, permissions and rules explicitly allow it.</p></div>
+    <div class="panel"><h4>No effective check</h4><p>If you cannot explain how a wrong output would be caught before harm, it is not ready.</p></div>
+  </div>
+  <div class="key warn"><span class="ic">!</span><p>“One bad prompt can become one hundred bad summaries.” Automation reproduces the same error consistently and at scale.</p></div>
+
+  <div class="activity">
+    <div class="ah"><b>Activity A6 · Design a safe automation workflow</b><span>Pairs · five boxes, one explicit checkpoint</span></div>
+    <div class="ab"><p>Scenario: “A student wants a weekly email summarising the week’s lecture materials.” Key question: <b>what would stop the workflow if the AI produced a poor summary?</b></p>
+      <div class="flow"><span>Trigger: week ends</span><b>→</b><span>Input: lecture materials</span><b>→</b><span>AI: generates summary</span><b>→</b><span class="hl">Checkpoint: student reviews</span><b>→</b><span>Output: email sent</span></div></div>
+  </div>
+
+  <h3>Local-first: cloud AI vs local AI</h3>
+  <p class="prose">The key difference is where the AI processing takes place. Local-first is not “cloud is bad”; it is a data-and-infrastructure decision.</p>
+  <div class="grid2">
+    <div class="panel"><h4>Cloud AI</h4><ul class="clean"><li>Processing on remote infrastructure</li><li>Needs network connectivity</li><li>Data may leave the local environment</li><li>Access to powerful models</li><li>Provider manages much of the infrastructure</li><li>Institution sets rules for approved use</li></ul></div>
+    <div class="panel"><h4>Local AI</h4><ul class="clean"><li>Processing on local infrastructure</li><li>Can work offline, depending on setup</li><li>Data can stay in the local environment</li><li>Performance depends on local hardware</li><li>User or institution maintains models and updates</li><li>Still needs security and governance</li></ul></div>
+  </div>
+  <p class="muted" style="margin-top:10px">Decide by data sensitivity, required capability, connectivity, cost, governance and hardware. Local AI is not automatically more private: that depends on how it is configured, secured and governed.</p>
+
+  <h3>n8n: visual workflow automation</h3>
+  <p class="prose">n8n connects apps, services, APIs, databases and AI models through visual workflows built from nodes, with optional code. It can be self-hosted for more control over data. n8n orchestrates workflows; it is not an agent by itself.</p>
+  <div class="flow"><span>Trigger: web form</span><b>→</b><span>n8n workflow</span><b>→</b><span>AI model: analyse / transform</span><b>→</b><span class="hl">Human check: review &amp; approve</span><b>→</b><span>Database · Email · Report</span></div>
+  <div class="activity">
+    <div class="ah"><b>Local automation lab · n8n + cloud LLM via API</b><span>25 minutes · synthetic data only</span></div>
+    <div class="ab"><div class="flow"><span>Synthetic notes</span><b>→</b><span>n8n</span><b>→</b><span>Cloud LLM via API</span><b>→</b><span>Structured summary</span><b>→</b><span>Local file</span></div>
+      <p><b>Extension for volunteers:</b> add a node that flags any sentence mentioning a person’s name: Detect → Flag → Human review → Continue / Stop.</p>
+      <div class="key stop" style="margin-bottom:0"><span class="ic">!</span><p>Local workflow ≠ local AI model. Text sent through the API leaves the local environment. Never use patient-identifiable information, real clinical records, confidential university data or personal information.</p></div></div>
+  </div>
+  <div class="complete" data-complete="8"></div>
+</div>
+</section>
+<!-- ================= M9 ================= -->
+<section class="section" id="m9" data-mod="9">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--s8)">9</div><div><h2>AI agents</h2><p>From following steps to pursuing a goal: the agent loop, who decides what happens next, and where the human stays.</p><div class="mod-meta">Slides 111–123 · Activity A7 agent lab and tutorials</div></div></div>
+
+  <blockquote class="def">An AI agent is a goal-oriented AI system that can pursue a goal through multiple steps, use tools, observe results, and determine subsequent actions until a defined stopping condition is reached.</blockquote>
+  <div class="flow"><span>Goal</span><b>→</b><span>Plan</span><b>→</b><span>Act</span><b>→</b><span>Observe</span><b>→</b><span>Decide</span><b>→</b><span>Act …</span><b>→</b><span class="hl">Stop</span></div>
+  <div class="grid2">
+    <div class="panel wash"><h4>A workflow says</h4><p class="def" style="font-size:1.1rem;margin:4px 0;border-color:var(--s4)">“Do these steps in this order.”</p></div>
+    <div class="panel wash"><h4>An agent says</h4><p class="def" style="font-size:1.1rem;margin:4px 0;border-color:var(--navy)">“Achieve this goal, using these capabilities and constraints.”</p></div>
+  </div>
+  <div class="key stop"><span class="ic">!</span><p>No stopping condition = uncontrolled execution. Examples: goal achieved, maximum steps reached, required evidence unavailable, human approval required, error or safety condition triggered.</p></div>
+
+  <h3>Three kinds of chatbot</h3>
+  <div class="grid3">
+    <div class="panel"><h4>01 Rule-based</h4><p>Predefined rules, menus, keywords. Specific, predictable tasks.</p><p class="muted">“Track my appointment.”</p></div>
+    <div class="panel"><h4>02 AI conversational</h4><p>Understands natural language and uses context; may combine NLP, ML, retrieval and tools.</p><p class="muted">“Help me find information about my appointment.”</p></div>
+    <div class="panel"><h4>03 Generative AI</h4><p>LLM-powered: generates new responses; summarises, explains, transforms; may use files, search or code.</p><p class="muted">“Explain this lecture and generate five practice questions.”</p></div>
+  </div>
+  <p class="muted" style="margin-top:8px">Not every chatbot is generative AI, but generative AI can power highly capable conversational assistants.</p>
+
+  <h3>Chatbot vs workflow vs agent: who decides what happens next?</h3>
+  <div class="tscroll"><table class="t">
+    <tr><th></th><th>Chatbot</th><th>Workflow</th><th>Agent</th></tr>
+    <tr><td>Who chooses the next step?</td><td>The user</td><td>The designer</td><td>The system, within limits</td></tr>
+    <tr><td>Pattern</td><td>Question → answer → next question</td><td>Trigger → step 1 → 2 → 3 → output</td><td>Goal → plan → act → observe → adapt → complete</td></tr>
+    <tr><td>Character</td><td>Usually reactive</td><td>Usually predictable</td><td>Goal-oriented and adaptive</td></tr>
+    <tr><td>Need for constraints &amp; oversight</td><td>Lower</td><td>Medium</td><td>Higher</td></tr>
+  </table></div>
+  <details class="qc"><summary>What makes an agent different from a chatbot?</summary><div class="ans"><b>A chatbot primarily responds to user inputs</b>; an agent can pursue a goal across multiple steps and determine or adapt its next action based on observations and results. “Agent” is not just a product label: autonomy can be bounded by tools, permissions, rules, step limits and human approval.</div></details>
+
+  <h3>Agent architecture: a walk-through</h3>
+  <p class="prose">Goal: <b>“Prepare me for the renal exam.”</b> Step through one complete loop.</p>
+  <div class="panel">
+    <div class="flow" id="agFlow"></div>
+    <div class="out" id="agOut" style="min-height:70px"></div>
+    <div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" id="agPrev">Previous</button><button class="btn sm primary" id="agNext">Next</button></div>
+  </div>
+  <div class="grid4" style="margin-top:14px">
+    <div class="panel"><h4>Skill · how</h4><p>Tells the agent how to perform a task.</p></div>
+    <div class="panel"><h4>Tool · act</h4><p>Gives the agent the ability to act.</p></div>
+    <div class="panel"><h4>API / MCP · connect</h4><p>Connects the agent to external systems.</p></div>
+    <div class="panel"><h4>Memory · state</h4><p>Keeps context and progress across steps.</p></div>
+  </div>
+
+  <h3>Where does the human stay in the loop?</h3>
+  <div class="grid2">
+    <div class="panel"><h4>Human-in-the-loop (HITL)</h4><div class="flow"><span>Goal</span><b>→</b><span>Agent</span><b>→</b><span class="hl">Human approval</span><b>→</b><span>Action</span></div><p>Human approves before action. The agent stops and waits.</p></div>
+    <div class="panel"><h4>Human-on-the-loop (HOTL)</h4><div class="flow"><span>Goal</span><b>→</b><span>Agent</span><b>→</b><span>Actions</span><b>→</b><span class="hl">Human monitoring</span></div><p>Human monitors during execution and can stop or override.</p></div>
+  </div>
+  <div class="panel wash" style="margin-top:14px"><h4>Classify the control level</h4><p class="muted">Pick the right control for each action. Practical rule: if an agent can send, delete, pay, publish, or access restricted data, place a human checkpoint before the action.</p><div id="hitl"></div><p class="feedback" id="hitlFb"></p></div>
+
+  <div class="activity">
+    <div class="ah"><b>Activity A7 · Build a Study Assistant Agent</b><span>Groups of four · 25 minutes</span></div>
+    <div class="ab"><p>Agent goal: prepare a student for an exam on a specified topic. Specify: <b>1</b> goal · <b>2</b> inputs · <b>3</b> skills · <b>4</b> tools · <b>5</b> decision points · <b>6</b> stopping condition · <b>7</b> human checkpoint · <b>8</b> final output.</p>
+    <div class="flow"><span>Receive topic</span><b>→</b><span>Key concepts</span><b>→</b><span>Outline</span><b>→</b><span>Practice questions</span><b>→</b><span>Evaluate answers</span><b>→</b><span class="tl">Sufficient?</span><b>no → weak areas → targeted questions ↺ · yes →</b><span class="hl">Student reviews</span><b>→</b><span>Study plan</span><b>→</b><span>Stop</span></div>
+    <p>Design the decision points: which concepts need more practice? When to generate more questions? When is understanding sufficient? When should it stop? Keep it educational: no patient data, diagnosis or treatment.</p></div>
+  </div>
+
+  <h3>Agent tutorials</h3>
+  <div class="tabs" role="tablist" data-tabs="agt">
+    <button role="tab" aria-selected="true" data-tab="g1">Custom GPTs</button>
+    <button role="tab" aria-selected="false" data-tab="g2">Agent in ChatGPT</button>
+    <button role="tab" aria-selected="false" data-tab="g3">Agent in Claude</button>
+    <button role="tab" aria-selected="false" data-tab="g4">Connector ≠ Agent</button>
+  </div>
+  <div class="tabpane" data-pane="g1">
+    <p>GPTs are configured versions of ChatGPT for a specific purpose: <b>instructions</b> (role, tone, boundaries) + <b>knowledge</b> (files, references) + <b>capabilities</b> (web, images, data analysis) + <b>actions/apps</b> where available.</p>
+    <div class="flow"><span>01 Create</span><b>→</b><span>02 Purpose</span><b>→</b><span>03 Instructions</span><b>→</b><span>04 Knowledge</span><b>→</b><span>05 Capabilities</span><b>→</b><span>06 Test</span><b>→</b><span>07 Share</span></div>
+    <p><b>Example, Medical Education GPT:</b> first-year assistant · course lectures and approved references · MBBS Year 1 level · summaries, key terms and practice questions · educational support, not diagnosis or treatment.</p>
+    <div class="key warn"><span class="ic">!</span><p>Status (Sept 2026): OpenAI plans to retire custom GPTs on 11 Dec 2026, moving them to plugins where instructions become a reusable skill. Creation may already be closed for some accounts; check before class. The concept stays the same.</p></div>
+  </div>
+  <div class="tabpane" data-pane="g2" hidden>
+    <div class="flow"><span>01 Define: goal, instructions, boundaries, output</span><b>→</b><span>02 Add tools &amp; apps</span><b>→</b><span>03 Configure connectors</span><b>→</b><span>04 Set permissions</span><b>→</b><span>05 Test &amp; deploy</span></div>
+    <p>Tools include web search, file and data tools, apps such as Google Drive, Gmail, Slack or SharePoint, and custom MCP apps for approved systems.</p>
+    <p><b>Permissions ladder:</b> read → search → create → modify → send. Lower risk: prefer read-only. Higher risk: require human confirmation. Feature names and availability depend on plan and workspace.</p>
+  </div>
+  <div class="tabpane" data-pane="g3" hidden>
+    <div class="flow"><span>01 Define the task as an outcome</span><b>→</b><span>02 Add Skills (the how)</span><b>→</b><span>03 Add connectors</span><b>→</b><span>04 Understand the connector</span><b>→</b><span>05 Run &amp; supervise</span></div>
+    <p>Example outcome: “Prepare a weekly study brief from my approved course materials and identify topics that need further review.” Connectors (Google Drive, Gmail, Slack, Microsoft 365, or custom via remote MCP) can read, search, and write where supported and authorised, and they <b>inherit your permissions</b>. Plugins can bundle Skills + connectors + sub-agents for reuse.</p>
+  </div>
+  <div class="tabpane" data-pane="g4" hidden>
+    <div class="grid4"><div class="panel"><h4>Connector</h4><p>Opens a channel to a service or data.</p></div><div class="panel"><h4>Tool</h4><p>A capability the agent can call.</p></div><div class="panel"><h4>Skill</h4><p>Defines how to perform a task.</p></div><div class="panel"><h4>Agent</h4><p>Uses goal + skills + tools + context to decide and execute multiple steps.</p></div></div>
+    <div class="flow" style="margin-top:12px"><span>Study Agent</span><b>→</b><span>Skill: summarise lecture</span><b>→</b><span>Connector: Google Drive</span><b>→</b><span>Tool: file search</span><b>→</b><span>Study guide</span><b>→</b><span class="hl">Human review</span></div>
+  </div>
+  <div class="complete" data-complete="9"></div>
+</div>
+</section>
+
+<!-- ================= M10 ================= -->
+<section class="section" id="m10" data-mod="10">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--navy)">10</div><div><h2>Vibe coding</h2><p>Building software by describing it, then testing whether it actually works.</p><div class="mod-meta">Slides 124–134 · live example, study-planner lab, four tools</div></div></div>
+  <blockquote class="def">Vibe coding is an AI-assisted approach to software development in which people use natural language and AI tools to create, modify, debug, and improve software iteratively.<cite>Term popularised by Andrej Karpathy (Feb 2025); Collins Dictionary Word of the Year 2025</cite></blockquote>
+  <div class="grid2">
+    <div class="panel"><h4>AI-assisted programming</h4><p>The developer reads and edits the code.</p></div>
+    <div class="panel"><h4>Vibe coding</h4><p>The user judges the resulting behaviour and directs AI iteratively.</p></div>
+  </div>
+  <div class="key warn"><span class="ic">!</span><p>Vibe coding ≠ “programming is no longer needed”. It lowers the barrier to building software, not the responsibility to understand, test and validate it: requirements, testing, validation, security, correctness.</p></div>
+
+  <h3>The workflow is CTCO applied to software</h3>
+  <div class="grid2">
+    <div class="tscroll" style="margin:0"><table class="t">
+      <tr><th>Prompting</th><th>Vibe coding</th></tr>
+      <tr><td>Context</td><td>Project, user, environment</td></tr><tr><td>Task</td><td>Software requirement</td></tr><tr><td>Constraints</td><td>Technical and functional limits</td></tr><tr><td>Output</td><td>Expected behaviour or interface</td></tr><tr><td>Verify</td><td>Run and test the software</td></tr>
+    </table></div>
+    <div><div class="flow"><span>Idea</span><b>→</b><span>Describe</span><b>→</b><span>AI generates prototype</span><b>→</b><span>Run</span><b>→</b><span class="hl">Test</span><b>→</b><span>Identify problems</span><b>→</b><span>Ask AI to fix</span><b>→</b><span class="hl">Retest</span><b>→</b><span>Improve</span><b>→</b><span>Document</span></div>
+    <p>Generated code can look correct while producing incorrect behaviour. Test the behaviour, not whether AI produced code.</p></div>
+  </div>
+
+  <h3>Live example: a self-test app from one prompt</h3>
+  <p class="prose">Requirement: paste Q&amp;A pairs → one question at a time → reveal answer → mark right or wrong → repeat wrong ones → show score. Light theme, phone-friendly, runs in the browser, no data leaves the browser. Iteration 2: “Add a 30-second timer for each question.” Try a working version of that app here.</p>
+  <div class="panel" id="selftest">
+    <div class="field"><label for="stIn">Paste question | answer pairs, one per line</label><textarea id="stIn" rows="4">What does CTCO stand for? | Context, Task, Constraints, Output
+What is the difference between a Skill and a Tool? | A Skill defines how to do a task; a Tool provides an external capability
+What does MCP stand for? | Model Context Protocol
+In HITL, when does the human act? | Before the action, by approving it</textarea></div>
+    <label style="display:flex;gap:8px;align-items:center;font-size:.92rem;margin-bottom:10px"><input type="checkbox" id="stTimer"> Iteration 2: add a 30-second timer</label>
+    <button class="btn primary sm" id="stStart">Start self-test</button>
+    <div id="stStage" style="margin-top:14px"></div>
+  </div>
+
+  <div class="activity">
+    <div class="ah"><b>Vibe coding lab · Healthcare student study planner</b><span>Pairs · 35 minutes · part of Assignment 1</span></div>
+    <div class="ab"><p><b>Input:</b> topic, days, hours per day, difficulty. <b>Output:</b> study plan, daily tasks, review points, progress.</p>
+    <p>Then improve step by step: validation · phone UI · progress tracking · export · edge cases · explainability (AI explains the key code). <b>Find and fix at least one bug.</b> A change is not a fix until it has been verified.</p>
+    <div class="flow"><span>Requirement</span><b>→</b><span>Prompt</span><b>→</b><span>Prototype</span><b>→</b><span>Test</span><b>→</b><span>Bug found</span><b>→</b><span>AI fix</span><b>→</b><span>Retest</span><b>→</b><span class="tl">Verified result</span></div>
+    <p class="muted">Assessed on the process (requirements, testing, iteration, problem solving, verification), not on programming ability, speed or amount of code.</p></div>
+  </div>
+
+  <h3>Vibe coding tools</h3>
+  <div class="grid2">
+    <div class="panel"><h4>OpenAI Codex <span class="mono muted" style="font-size:.78rem">openai.com/codex</span></h4><p>AI coding agent in ChatGPT, IDE and CLI: generates code from requirements, modifies and debugs, runs commands and tests, reviews code, and iterates build → test → fix → retest.</p></div>
+    <div class="panel"><h4>Claude Code <span class="mono muted" style="font-size:.78rem">claude.com/product/claude-code</span></h4><p>Anthropic’s agentic coding tool in terminal, IDE, desktop and web: explores a codebase, edits files, runs tests, debugs, and integrates with GitHub and MCP. The human decides what; Claude Code handles much of how.</p></div>
+    <div class="panel"><h4>Google AI Studio <span class="mono muted" style="font-size:.78rem">aistudio.google.com</span></h4><p>Build Mode turns natural-language descriptions into apps with a live preview; refine features, inspect code, export or sync with GitHub.</p></div>
+    <div class="panel"><h4>Google Antigravity <span class="mono muted" style="font-size:.78rem">antigravity.google</span></h4><p>Agent-first development platform: delegate multi-step tasks to agents across editor, terminal and browser, with artifacts and verification results. Version 2.0 (May 2026) orchestrates parallel agents.</p></div>
+  </div>
+  <div class="activity">
+    <div class="ah"><b>Step by step · A source-grounded study chatbot in Google AI Studio</b><span>Basis of Assignment 1</span></div>
+    <div class="ab"><ol><li>Open aistudio.google.com</li><li>Select <b>Build</b></li><li>Upload the required reading PDF</li><li>Prompt: “Build a study chatbot that answers questions using only the uploaded lecture files. If the answer is not supported by the files, clearly state that the information is not available in the provided sources. Create a suitable title based on the uploaded content.”</li><li>Test both kinds of question: “What is prompt engineering?” should be answered from the lecture; “What will be on the final exam?” should return “Not available in the provided sources.”</li><li>Use Auto Fix where available, then test again</li><li>Select <b>Deploy app</b>; share a fresh, working link</li></ol></div>
+  </div>
+  <div class="complete" data-complete="10"></div>
+</div>
+</section>
+<!-- ================= M11 ================= -->
+<section class="section" id="m11" data-mod="11">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--red)">11</div><div><h2>Ethics principles for using AI tools</h2><p>Use AI as a learning and productivity aid while remaining responsible for how it is used and what it produces.</p><div class="mod-meta">Slides 135–142</div></div></div>
+
+  <div class="grid3">
+    <div class="panel"><h4>1 Responsibility</h4><p>You remain responsible for the final work and decisions.</p></div>
+    <div class="panel"><h4>2 Transparency</h4><p>Disclose AI use when required by the instructor, course, institution or publication.</p></div>
+    <div class="panel"><h4>3 Academic integrity</h4><p>Do not present AI-generated work as entirely your own when this violates academic rules.</p></div>
+    <div class="panel"><h4>4 Privacy &amp; confidentiality</h4><p>Do not upload patient-identifiable, confidential or restricted information into unauthorised tools.</p></div>
+    <div class="panel"><h4>5 Accuracy &amp; verification</h4><p>Check important AI-generated information against reliable sources.</p></div>
+    <div class="panel"><h4>6 Fairness &amp; respect</h4><p>Be alert to bias, stereotypes, inappropriate content and unequal treatment.</p></div>
+  </div>
+
+  <h3>AI assistance ≠ human responsibility</h3>
+  <div class="tscroll"><table class="t">
+    <tr><th>AI can help</th><th>The student must own</th></tr>
+    <tr><td>Generate ideas</td><td>Learning</td></tr><tr><td>Draft content</td><td>Accuracy</td></tr><tr><td>Explain concepts</td><td>Understanding</td></tr><tr><td>Summarise sources</td><td>Verification</td></tr><tr><td>Improve language</td><td>Final submission</td></tr><tr><td>Generate code</td><td>Testing and correctness</td></tr>
+  </table></div>
+  <div class="flow"><span>Student goal</span><b>→</b><span style="border-style:dashed">AI assistance</span><b>→</b><span>Student review</span><b>→</b><span class="hl">Verification</span><b>→</b><span>Final work</span></div>
+
+  <h3>Academic integrity: appropriate or problematic?</h3>
+  <p class="prose">Sort each use. Select a card, then choose a column.</p>
+  <div class="pool" id="aiPool"></div>
+  <div class="bins grid2" id="aiBins"></div>
+  <div style="display:flex;gap:10px;align-items:center;margin-top:8px"><button class="btn sm primary" id="aiCheck">Check</button><button class="btn sm ghost" id="aiReset">Reset</button><span class="feedback" id="aiFb"></span></div>
+  <div class="panel wash" style="margin-top:14px"><h4>Before using AI for an assignment, ask</h4><div class="flow"><span>Is AI allowed?</span><b>→</b><span>What level is allowed?</span><b>→</b><span>Must I disclose it?</span><b>→</b><span>What must I verify?</span></div><p>Follow the specific AI-use policy of your course, instructor and institution.</p></div>
+
+  <h3>Privacy, confidentiality and sensitive data</h3>
+  <div class="grid2">
+    <div class="panel" style="border-color:var(--red)"><h4>Never upload without explicit authorisation</h4><ul class="clean no"><li>Patient names or identifiers</li><li>Medical record numbers</li><li>Phone numbers or addresses</li><li>Identifiable clinical photographs</li><li>Confidential institutional documents</li><li>Restricted examination materials</li><li>Passwords, credentials or access tokens</li></ul></div>
+    <div class="panel" style="border-color:var(--green)"><h4>Safer alternatives</h4><ul class="clean ok"><li><b>Synthetic data</b>: fictional cases</li><li><b>Public data</b>: explicitly available for public use</li><li><b>Approved data</b>: only when your institution authorises the specific tool and use</li></ul>
+      <h4 style="margin-top:14px">Before uploading</h4><p>1 What is the data? 2 Who can access it? 3 Where is it processed? 4 Is this use authorised?</p></div>
+  </div>
+  <div class="key stop"><span class="ic">!</span><p>When in doubt, do not upload the data.</p></div>
+
+  <h3>Accuracy, hallucination and verification</h3>
+  <div class="grid3">
+    <div class="panel"><h4>AI content can contain</h4><ul class="clean no"><li>Incorrect facts</li><li>Fabricated references</li><li>Outdated information</li><li>Missing context</li><li>Misleading explanations</li><li>Overconfident conclusions</li></ul></div>
+    <div class="panel wash"><h4>The verification loop</h4><div class="flow" style="flex-direction:column;align-items:stretch"><span>Generate</span><span>Inspect</span><span class="hl">Check the source</span><span>Compare</span><span>Correct</span><span>Use</span></div></div>
+    <div class="panel"><h4>For medical claims, check</h4><ul class="clean ok"><li>Textbooks</li><li>Peer-reviewed research</li><li>Official guidelines</li><li>Trusted medical databases</li><li>Instructor-provided materials</li></ul></div>
+  </div>
+  <div class="key"><span class="ic">i</span><p>AI output is a starting point for evaluation, not automatically verified knowledge.</p></div>
+
+  <h3>Bias, fairness and responsible use</h3>
+  <div class="grid2">
+    <div class="panel"><h4>AI outputs may contain</h4><p><b>Representation bias</b>: some populations under-represented in training data.<br><b>Language &amp; cultural bias</b>: responses differ across languages and contexts.<br><b>Stereotyping</b>: assumptions about groups or individuals.<br><b>Accessibility gaps</b>: content may not work equally well for all learners.</p></div>
+    <div class="panel"><h4>What students should do</h4><p><b>Question</b>: is the output making an assumption?<br><b>Check</b>: is there evidence?<br><b>Compare</b>: would it change for another population or context?<br><b>Correct</b>: remove unsupported or inappropriate claims.<br><b>Disclose</b>: explain AI involvement when required.</p></div>
+  </div>
+
+  <h3>The student AI ethics checklist</h3>
+  <p class="prose">Seven questions before you click “Send”. Tick each one for your next real AI task.</p>
+  <div class="checklist" id="ethicsList"></div>
+  <p class="feedback" id="ethicsFb"></p>
+  <div class="eq">AI-assisted ≠ AI-autonomous · AI-generated ≠ AI-verified · AI assistance ≠ transfer of responsibility</div>
+  <div class="complete" data-complete="11"></div>
+</div>
+</section>
+
+<!-- ================= M12 ================= -->
+<section class="section" id="m12" data-mod="12">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--ink)">12</div><div><h2>Synthesis: the final conceptual map</h2><p>One problem, carried up every step. Increasing capability, increasing responsibility.</p><div class="mod-meta">Slides 143–147 · integrated challenge</div></div></div>
+
+  <h3 style="margin-top:0">If you remember only one thing</h3>
+  <p class="prose">Nine concepts, one mental model. Tap each card.</p>
+  <div class="flipgrid" id="nineCards"></div>
+  <div class="eq">A prompt asks. A skill structures. A tool enables action. An API connects. MCP standardises the connection. A workflow defines steps. Automation repeats them. An agent pursues a goal. Vibe coding helps build the solution.</div>
+
+  <div class="activity">
+    <div class="ah"><b>Integrated challenge · From prompt to agentic workflow</b><span>All outcomes · teams of 4–5 · 30 minutes</span></div>
+    <div class="ab">
+      <p>Team problem: <b>“How can we help students prepare for ________?”</b> Carry the same problem up every step and answer one question at each level:</p>
+      <div class="tscroll"><table class="t">
+        <tr><th>Level</th><th>Question</th></tr>
+        <tr><td>1 Prompt</td><td>What are we asking AI to do?</td></tr><tr><td>2 Iteration</td><td>How did we improve it?</td></tr><tr><td>3 Skill</td><td>What can be reused?</td></tr><tr><td>4 Tool</td><td>What can AI now do externally?</td></tr><tr><td>5 API</td><td>Which service does it connect to?</td></tr><tr><td>6 MCP</td><td>How is it exposed to the AI?</td></tr><tr><td>7 Automation</td><td>Which steps run repeatedly?</td></tr><tr><td>8 Agent</td><td>What can it decide or adapt?</td></tr><tr><td>9 Vibe coding</td><td>What prototype shows it?</td></tr>
+      </table></div>
+      <p><b>Roles:</b> Problem owner (need) · AI designer (prompts, skills) · Systems designer (tools, API, MCP) · Agent &amp; safety (checkpoints, stop) · Prototype lead (vibe coding, demo).</p>
+      <p><b>Presentation, 3 minutes:</b> problem 20 s · journey 90 s · prototype 40 s · reflection 30 s (what needs the most human oversight, and why?).</p>
+    </div>
+  </div>
+
+  <h3>The safety rule for everything above</h3>
+  <div class="grid2">
+    <div class="panel"><h4>Do not enter</h4><ul class="clean no"><li>Patient names</li><li>MRNs (medical record numbers)</li><li>Phone numbers, addresses</li><li>Confidential records</li><li>Confidential institutional information</li></ul></div>
+    <div class="panel"><h4>Safe for this lab</h4><ul class="clean ok"><li>Synthetic data, fictional cases</li><li>Public data</li><li>Educational examples</li><li>Approved course materials</li><li>Permitted de-identified material</li></ul></div>
+  </div>
+  <div class="flow"><span>AI output</span><b>→</b><span class="hl">Human verification: inspect · verify · decide · act within permissions</span><b>→</b><span>Decision / action</span></div>
+
+  <h3>The final map</h3>
+  <div class="panel wash">
+    <div class="flow"><span>Human</span><b>→</b><span>Prompt</span><b>→</b><span>Generative AI</span><b>→</b><span>Skill · Tool</span><b>→</b><span>API / MCP</span><b>→</b><span>Workflow</span><b>→</b><span>Automation</span><b>→</b><span>Agent</span><b>→</b><span>Vibe coding</span><b>→</b><span class="tl">AI-assisted solution</span></div>
+    <p style="margin:6px 0 0">Phases: <b>interact · connect · automate · delegate · build</b>. At every step: human oversight, verification, security and appropriate use.</p>
+  </div>
+  <div class="key"><span class="ic">✓</span><p>You did not learn nine unrelated technologies. You learned one progression: how a human can move from asking AI a question to designing, connecting, supervising and building AI-assisted solutions.</p></div>
+  <div class="complete" data-complete="12"></div>
+</div>
+</section>
+
+<!-- ================= STUDY LAB ================= -->
+<section class="section lab-sec" id="lab">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--violet)">★</div><div><h2>Study lab</h2><p>Flashcards, a graded quiz, a matching game, a glossary, and a self-assessment against the nine learning outcomes.</p></div></div>
+  <div class="tabs" role="tablist" data-tabs="lab">
+    <button role="tab" aria-selected="true" data-tab="fc">Flashcards</button>
+    <button role="tab" aria-selected="false" data-tab="qz">Quiz</button>
+    <button role="tab" aria-selected="false" data-tab="mt">Match the concepts</button>
+    <button role="tab" aria-selected="false" data-tab="gl">Glossary</button>
+    <button role="tab" aria-selected="false" data-tab="sa">Self-assessment</button>
+  </div>
+  <div class="tabpane" data-pane="fc">
+    <div class="deck">
+      <div class="filters" id="fcFilters" style="justify-content:center"></div>
+      <button class="bigcard" id="bigcard" aria-live="polite"><div class="in"><div class="f"><span class="cat" id="fcCat"></span><span class="q" id="fcQ"></span><span class="hint">Tap or press Space to flip</span></div><div class="b" id="fcA"></div></div></button>
+      <div class="deckbar"><button class="btn sm" id="fcPrev">Previous</button><span class="cnt" id="fcCnt"></span><button class="btn sm" id="fcNext">Next</button></div>
+      <div class="deckbar" style="justify-content:center"><button class="btn sm" id="fcShuffle">Shuffle</button><button class="btn sm" id="fcKnow">I know this</button><button class="btn sm ghost" id="fcReview">Review only unknown</button></div>
+    </div>
+  </div>
+  <div class="tabpane" data-pane="qz" hidden><div class="quiz" id="quiz"></div></div>
+  <div class="tabpane" data-pane="mt" hidden>
+    <p class="prose">Select a concept on the left, then its meaning on the right. Nine pairs.</p>
+    <div class="match"><div class="col" id="mL"></div><div class="col" id="mR"></div></div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:12px"><button class="btn sm" id="mReset">New round</button><span class="feedback" id="mFb"></span></div>
+  </div>
+  <div class="tabpane" data-pane="gl" hidden>
+    <input class="gloss-search" id="glQ" type="search" placeholder="Search terms, e.g. MCP, hallucination, HITL" aria-label="Search glossary">
+    <div class="gloss" id="gloss"></div>
+  </div>
+  <div class="tabpane" data-pane="sa" hidden>
+    <p class="prose">Rate your confidence in each learning outcome. Saved on this device; revisit after the activities.</p>
+    <div class="conf" id="conf"></div>
+    <p class="feedback" id="confFb"></p>
+  </div>
+</div>
+</section>
+
+<!-- ================= ASSIGNMENTS ================= -->
+<section class="section" id="assign">
+<div class="wrap">
+  <div class="mod-head"><div class="mod-num" style="background:var(--teal)">✎</div><div><h2>Assignments and resources</h2><p>Two graded assignments and the reading list for this lecture.</p></div></div>
+  <div class="grid2">
+    <div class="panel"><h4>Assignment 1 · Building a custom language model with Google AI Studio</h4>
+      <p><b>Objective:</b> become familiar with Google AI Studio and its capabilities for creating customised language models tailored to specific medical learning resources.</p>
+      <p><b>Task:</b> build a custom model in Google AI Studio, restricted to the core reference materials provided in this lecture, that answers questions and summarises content only from the assigned references.</p>
+      <p><b>Deliverable:</b> publish the model and submit only its link, publicly accessible and functional at evaluation.</p>
+      <p><b>Evaluation:</b> proper use of the assigned references as the knowledge base; functionality and accessibility; clarity and correctness of responses.</p>
+      <p><b>Deadline:</b> 10 October 2025 (as stated on the slide).</p></div>
+    <div class="panel"><h4>Assignment 2 · Summarising and presenting key concepts using NotebookLM</h4>
+      <p><b>Objective:</b> practise summarisation and turn written knowledge into a concise, creative multimedia explanation.</p>
+      <p><b>Task:</b> review the first reference (PDF), summarise the main ideas with NotebookLM, and create a 30-second explanatory video.</p>
+      <p><b>Deliverable:</b> download the video from NotebookLM and upload only the 30-second file to the LMS.</p>
+      <p><b>Evaluation:</b> accuracy (faithfulness to the reference), use of the tool, creativity.</p>
+      <p><b>Deadline:</b> 22 October 2026 (as stated on the slide).</p></div>
+  </div>
+  <div class="key warn"><span class="ic">!</span><p>The two deadlines on the original slides use different years (2025 and 2026). Confirm the current dates on the LMS.</p></div>
+
+  <h3>Required reading</h3>
+  <ol class="ref">
+    <li>Heston, T. F., &amp; Khun, C. (2023). Prompt engineering in medical education. <i>International Medical Education, 2</i>(3), 198–205. <a href="https://doi.org/10.3390/ime2030019" target="_blank" rel="noopener">doi.org/10.3390/ime2030019</a></li>
+    <li>Maaz, S., Palaganas, J. C., Palaganas, G., &amp; Bajwa, M. (2025). A guide to prompt design: foundations and applications for healthcare simulationists. <i>Frontiers in Medicine, 11</i>, 1504532. <a href="https://doi.org/10.3389/fmed.2024.1504532" target="_blank" rel="noopener">doi.org/10.3389/fmed.2024.1504532</a></li>
+    <li>Patil, R., Heston, T. F., &amp; Bhuse, V. (2024). Prompt engineering in healthcare. <i>Electronics, 13</i>(15), 2961. <a href="https://doi.org/10.3390/electronics13152961" target="_blank" rel="noopener">doi.org/10.3390/electronics13152961</a></li>
+  </ol>
+  <h3>Additional reading (optional)</h3>
+  <ol class="ref">
+    <li>Heston, T. F. (2023). Prompt engineering for students of medicine and their teachers. <i>arXiv</i>, abs/2308.11628.</li>
+    <li>Chew, B.-H., &amp; Ngiam, K. Y. (2025). Artificial intelligence tool development: what clinicians need to know? <i>BMC Medicine, 23</i>(1), 1–19. <a href="https://doi.org/10.1186/s12916-025-04076-0" target="_blank" rel="noopener">doi.org/10.1186/s12916-025-04076-0</a></li>
+  </ol>
+</div>
+</section>
+<footer><div class="wrap">SKL 101: Fundamentals of Artificial Intelligence in Healthcare · Lecture 5 · King Saud University, College of Medicine, Medical Education Department, Medical Informatics &amp; eLearning Unit (MIELU). Dr. Ghalib H. Alshammri. Educational use only; no patient data.</div></footer>
+</main>
+</div>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const store={get(k,d){try{const v=localStorage.getItem("skl5:"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("skl5:"+k,JSON.stringify(v))}catch(e){}}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("on"),1800)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function copy(text){ if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>toast("Copied to clipboard"),()=>toast("Select the text and copy it manually"))} else toast("Select the text and copy it manually") }
+
+/* ---------- modules & navigation ---------- */
+const MODS=[["Orientation: the AI journey","var(--s1)",1],["AI foundations","var(--s2)",1],["Generative AI & LLMs","var(--s3)",0],["Prompt engineering","var(--s4)",0],["Generative AI tools","var(--s5)",0],["Skills & the Challenger","var(--s6)",0],["API & MCP","var(--s7)",0],["AI automation","var(--s7)",0],["AI agents","var(--s8)",0],["Vibe coding","var(--navy)",0],["Ethics","var(--red)",0],["Synthesis","var(--ink)",0]];
+let done=store.get("done",[]);
+function renderNav(){
+  $("#stair").innerHTML=MODS.map((m,i)=>`<li><a href="#m${i+1}" data-nav="m${i+1}" class="${done.includes(i+1)?"done":""}"><span class="dot" style="background:${m[1]};${m[2]?"color:var(--navy)":""}">${i+1}</span><span>${esc(m[0])}</span><span class="ck" aria-label="${done.includes(i+1)?"complete":"not complete"}"></span></a></li>`).join("");
+  $("#stair2").innerHTML=[["lab","Study lab","var(--violet)","★"],["assign","Assignments & reading","var(--teal)","✎"]].map(x=>`<li><a href="#${x[0]}" data-nav="${x[0]}"><span class="dot" style="background:${x[2]}">${x[3]}</span><span>${x[1]}</span><span></span></a></li>`).join("");
+  const n=done.length; $("#plabel").textContent=`${n} of 12 modules complete`; $("#pfill").style.width=(n/12*100)+"%";
+  $$(".complete").forEach(el=>{const k=+el.dataset.complete, d=done.includes(k);
+    el.classList.toggle("is-done",d);
+    el.innerHTML=d?`<span><b>Module ${k} complete.</b> ${k<12?'Carry on to the next module.':'You have finished the lecture. Review in the study lab.'}</span><span style="display:flex;gap:8px">${k<12?`<a class="btn sm primary" href="#m${k+1}">Next module</a>`:`<a class="btn sm primary" href="#lab">Open study lab</a>`}<button class="btn sm ghost" data-undo="${k}">Mark as not done</button></span>`
+     :`<span>Finished reading and trying the activities in this module?</span><button class="btn sm primary" data-mark="${k}">Mark module ${k} complete</button>`;});
+}
+document.addEventListener("click",e=>{
+  const m=e.target.closest("[data-mark]"), u=e.target.closest("[data-undo]");
+  if(m){const k=+m.dataset.mark; if(!done.includes(k))done.push(k); store.set("done",done); renderNav(); toast(`Module ${k} marked complete`)}
+  if(u){done=done.filter(x=>x!==+u.dataset.undo); store.set("done",done); renderNav()}
+});
+renderNav();
+const side=$("#side"), scrim=$("#scrim");
+$("#menuBtn").addEventListener("click",()=>{side.classList.add("open");scrim.classList.add("on")});
+function closeSide(){side.classList.remove("open");scrim.classList.remove("on")}
+scrim.addEventListener("click",closeSide); side.addEventListener("click",e=>{if(e.target.closest("a"))closeSide()});
+const secs=$$("main section[id]");
+if("IntersectionObserver" in window){
+  const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){$$(".side a").forEach(a=>a.classList.toggle("active",a.dataset.nav===en.target.id))}})},{rootMargin:"-35% 0px -60% 0px"});
+  secs.forEach(s=>io.observe(s));
+}
+
+/* ---------- tabs ---------- */
+$$("[data-tabs]").forEach(bar=>{
+  const scope=bar.parentElement;
+  bar.addEventListener("click",e=>{const b=e.target.closest("[data-tab]"); if(!b)return;
+    $$("[data-tab]",bar).forEach(x=>x.setAttribute("aria-selected",x===b?"true":"false"));
+    const names=$$("[data-tab]",bar).map(x=>x.dataset.tab);
+    names.forEach(n=>{const p=$(`[data-pane="${n}"]`,scope); if(p)p.hidden=(n!==b.dataset.tab)});
+  });
+});
+
+/* ---------- journey ---------- */
+const J=[["Prompt","Ask","I ask AI.","Get an answer."],["Conversation","Collaborate","I collaborate with AI.","Explore and refine ideas."],["Skill","Capability","I give AI a reusable capability.","Perform a defined task consistently."],["Tool","Action","I give AI the ability to act.","Interact with external tools."],["API / MCP","Connect","I connect AI to systems.","Access data, services and capabilities."],["Automation","Automate","The system runs repetitive steps.","Reduce manual work."],["Agent","Delegate","I give AI a goal; it takes steps.","Increase autonomy."],["Vibe coding","Build","I build the solution with AI.","Create an AI-assisted solution."]];
+const jc=["--s1","--s2","--s3","--s4","--s5","--s6","--s7","--s8"];
+const jlink=["m4","m4","m6","m5","m7","m8","m9","m10"];
+$("#steps").innerHTML=J.map((j,i)=>`<button class="step ${i<2?"light":""}" role="listitem" data-j="${i}" style="height:${28+i*10}%;background:var(${jc[i]})" aria-label="Level ${i+1}: ${j[0]}"><span class="n">0${i+1}</span><span class="t">${j[0]}</span></button>`).join("");
+function showJ(i){$$(".step").forEach(s=>s.classList.toggle("on",+s.dataset.j===i));const j=J[i];
+  $("#jdetail").innerHTML=`<span class="tag">Level ${i+1} · ${j[1]}</span><h4>${j[0]}: ${j[2]}</h4><p>${j[3]} <a href="#${jlink[i]}">Go to this part of the lecture</a></p>`}
+$("#steps").addEventListener("mouseover",e=>{const s=e.target.closest(".step");if(s)showJ(+s.dataset.j)});
+$("#steps").addEventListener("click",e=>{const s=e.target.closest(".step");if(s)showJ(+s.dataset.j)});
+$("#steps").addEventListener("focusin",e=>{const s=e.target.closest(".step");if(s)showJ(+s.dataset.j)});
+showJ(0);
+
+/* ---------- LOs ---------- */
+const BL={Remember:"#7a8b99",Understand:"#3f9aa1",Apply:"#2a808d",Analyse:"#5a4a9c",Create:"#0b3b54"};
+const LO=[["Understand","Demonstrate advanced prompt engineering in healthcare"],["Analyse","Improve AI responses through iterative interaction and critique"],["Apply","Apply generative AI tools"],["Understand","Explain AI agent, AI automation, AI skills, API and MCP"],["Create","Create a simple reusable AI Skill using the eleven-field template"],["Create","Design a Challenger / Opposition Skill that tests a claim"],["Create","Use vibe coding to prototype a simple AI-assisted solution"],["Create","Design a simple AI agent and AI automation"],["Remember","Recognise limitations and ethical considerations of using generative AI tools"]];
+$("#loGrid").innerHTML=LO.map((l,i)=>`<div><span class="bl" style="background:${BL[l[0]]}">${l[0]}</span><div><b>${i+1}.</b> ${l[1]}</div></div>`).join("");
+
+/* ---------- checklists ---------- */
+function checklist(el,key,items,onChange){const st=store.get(key,{});
+  el.innerHTML=items.map((it,i)=>`<label><input type="checkbox" data-i="${i}" ${st[i]?"checked":""}><span><b>${it[0]}</b>${it[1]?`<span class="muted">${it[1]}</span>`:""}</span></label>`).join("");
+  el.addEventListener("change",e=>{const c=e.target;if(!c.dataset)return;st[c.dataset.i]=c.checked;store.set(key,st);onChange&&onChange(st)});onChange&&onChange(st)}
+checklist($("#reqList"),"req",[["Bring your own device","Laptop or tablet, fully charged, with charger."],["Google account","An active Gmail account, or create one before the session."],["ChatGPT & Claude accounts","Create or log in to access the AI tools."],["Internet access","Wi-Fi or a mobile hotspot."],["Personal preparation","A notebook and pen for quick notes."]]);
+const ACTS=[["Activity 2 · Create a citation (QuillBot)","APA 7 citation, then check every element against the source."],["Activity 3 · Summarise a text (QuillBot)","Compare the summary with the original: what was lost?"],["Activity 4 · ChatPDF","Upload a PDF, summarise it, create 3 MCQs with answers."],["Activity 5 · Venngage","Upload a PDF and create an infographic."],["Activity 6 · MyMap AI","Upload a PDF and create a mind map."],["Activity 7 · Excalidraw","Create a whiteboard and collaborate with a colleague."],["Activity 8 · NotebookLM","Upload a PDF and summarise it to video."],["Activity 9 · Canvas in Gemini","Create an educational game, infographic, quiz, web page, audio."],["Activity 10 · NoteGPT","Summarise a YouTube link and give its main three points."],["Activity 11 · ImgUpscaler","Upload a low-resolution image and upscale it."],["Activity 12 · Z AI","Upload a PDF, summarise it, create a presentation."],["Activity 13 · Kimi AI","Same task: compare preset and adaptive modes."],["Activity 14 · Zoho Analytics","Generate synthetic medical data with ChatGPT, import it, auto-generate reports."],["Activity 15 · Nano Banana","Generate an image, then edit it by instruction."]];
+checklist($("#actList"),"acts",ACTS);
+const ETH=[["Purpose","Why am I using AI?"],["Permission","Is AI use allowed for this task?"],["Privacy","Am I entering sensitive or confidential information?"],["Accuracy","How will I verify the output?"],["Integrity","Am I representing my work honestly?"],["Bias","Could the output contain unfair assumptions?"],["Responsibility","Can I explain and defend the final result?"]];
+checklist($("#ethicsList"),"eth",ETH,st=>{const n=Object.values(st).filter(Boolean).length;$("#ethicsFb").className="feedback "+(n===7?"good":"");$("#ethicsFb").textContent=n===7?"All seven answered. You are ready to send.":`${n} of 7 checked.`});
+
+/* ---------- flip cards ---------- */
+function flips(el,cards){el.innerHTML=cards.map(c=>`<button class="flip" aria-label="${esc(c[0])}: show meaning"><div class="in"><div class="f"><strong>${c[0]}</strong><small>${c[1]}</small></div><div class="b">${c[2]}</div></div></button>`).join("");
+  el.addEventListener("click",e=>{const f=e.target.closest(".flip");if(f)f.classList.toggle("on")})}
+flips($("#enterCards"),[["1 Prediction","How text is produced","The model generates the response token by token: word piece after word piece."],["2 Context","What it can see","It uses information in the conversation; external information requires an appropriate tool or source."],["3 Knowledge cutoff","When it learned","Its learned knowledge reflects a training period and may miss newer guidelines."],["4 Sampling","Why answers vary","Generation can be probabilistic, so the same prompt may produce different responses."],["5 Helpfulness","Why it agrees","Tuned to be helpful and cooperative; helpful-sounding does not guarantee correctness."]]);
+flips($("#toolCards"),[["Calculator","Calculate","Perform precise numerical calculations."],["Web search","Search","Retrieve current or external information."],["File reader","Read","Read and analyse documents and uploaded files."],["Spreadsheet","Analyse","Analyse, transform and organise tabular data."],["Code interpreter","Execute","Execute code and analyse data computationally."],["Database","Retrieve","Retrieve information from structured data systems."],["Image generator","Create","Create images from text instructions."],["Calendar","Schedule","Read or manage scheduled events."],["Email","Communicate","Read, draft, or send messages when authorised."]]);
+flips($("#apiCards"),[["Endpoint","Where? · the counter","The specific address where a request is sent."],["Request","What? · the order","What the client asks the service to do."],["Parameters","Details? · how you want it","Details that customise the request."],["Authentication","Who? · your ID card","Establishes authorised access."],["Response","Result? · the plate","What the service returns."],["JSON","Format? · standard shape","A structured format for request and response data."]]);
+flips($("#nineCards"),[["01 Prompt","Ask","Tell AI what you need and what a useful answer looks like."],["02 Skill","How","Give AI a reusable method for performing a task."],["03 Tool","Act","Give AI an external capability it can invoke."],["04 API","Connect","Let software request data or capabilities from another system."],["05 MCP","Standardise","A standard way for AI applications to connect to tools and resources."],["06 Workflow","Sequence","Define the steps and their order in advance."],["07 Automation","Repeat","Run a defined process with reduced manual effort."],["08 Agent","Pursue","Give AI a goal; it determines and adapts its next actions within constraints."],["09 Vibe coding","Build","Describe, generate, test, refine and verify a software solution with AI."]]);
+
+/* ---------- CTCO ---------- */
+const ctF=["cC","cT","cK","cO"].map(id=>$("#"+id));
+function ctco(){const v=ctF.map(f=>f.value.trim());const sp=$$("#ctcoMeter span");v.forEach((x,i)=>sp[i].classList.toggle("ok",!!x));
+  const n=v.filter(Boolean).length; $("#ctcoOut").textContent=n?v.filter(Boolean).join(" "):"Your prompt will appear here as you type.";
+  $("#ctcoFb").textContent=n===4?"All four elements present. Now run it, then inspect and verify.":n?`${4-n} element${4-n>1?"s":""} missing.`:"";$("#ctcoFb").className="feedback "+(n===4?"good":"")}
+ctF.forEach(f=>f.addEventListener("input",ctco));
+$("#ctcoEx").onclick=()=>{ctF.forEach(f=>f.value=f.placeholder);ctco()};
+$("#ctcoClr").onclick=()=>{ctF.forEach(f=>f.value="");ctco()};
+$("#ctcoCopy").onclick=()=>copy($("#ctcoOut").textContent);
+
+/* ---------- ladder ---------- */
+$("#ladderR").addEventListener("input",e=>{const v=+e.target.value;$$("#ladder .rung").forEach((r,i)=>r.classList.toggle("on",i<v))});
+
+/* ---------- error table ---------- */
+$("#errTab").addEventListener("click",e=>{const c=e.target.closest("td.cell");if(!c)return;
+  $$("#errTab td").forEach(t=>t.classList.remove("miss"));
+  if(c.dataset.bad){c.classList.add("bad-hit");$("#errFb").className="feedback good";$("#errFb").textContent="Correct. In Type 2 diabetes there is insulin resistance with a relative deficiency in insulin secretion; insulin is very much involved. The table looked authoritative and was still wrong."}
+  else{c.classList.add("miss");$("#errFb").className="feedback bad";$("#errFb").textContent="That cell is correct. Look again at the insulin row."}});
+
+/* ---------- generic stepper ---------- */
+function stepper(flowEl,outEl,prev,next,steps){let i=0;
+  function r(){flowEl.innerHTML=steps.map((s,k)=>`${k?"<b>→</b>":""}<span class="${k===i?"tl":""}" style="cursor:pointer" data-k="${k}">${s[0]}</span>`).join("");outEl.innerHTML=steps[i][1];prev.disabled=i===0;next.disabled=i===steps.length-1}
+  prev.onclick=()=>{if(i>0){i--;r()}};next.onclick=()=>{if(i<steps.length-1){i++;r()}};flowEl.addEventListener("click",e=>{const s=e.target.closest("[data-k]");if(s){i=+s.dataset.k;r()}});r()}
+stepper($("#iterFlow"),$("#iterOut"),$("#iterPrev"),$("#iterNext"),[
+ ["R1","<b>Generate.</b> “Explain acute inflammation.”"],["R2","<b>Simplify.</b> “Simplify the explanation for a first-year medical student.”"],["R3","<b>Critique.</b> “Identify three important weaknesses or missing points.”"],["R4","<b>Improve.</b> “Add the missing points and correct any weaknesses.”"],["R5","<b>Structure.</b> “Convert the explanation into a clear comparison table.”"],["R6","<b>Assess.</b> “Generate three MCQs that test the key concepts, with answers.” Each round adds: better → clearer → more useful → more checkable."]]);
+stepper($("#chalFlow"),$("#chalOut"),$("#chalPrev"),$("#chalNext"),[
+ ["1","<b>Identify the claim.</b> What exactly is being asserted?"],["2","<b>Surface assumptions.</b> What must be true for the claim to hold?"],["3","<b>Challenge the claim.</b> What reasons might make it questionable?"],["4","<b>Find weaknesses.</b> Where is the reasoning incomplete or vulnerable?"],["5","<b>Counter-arguments.</b> What is a strong opposing interpretation?"],["6","<b>Missing evidence.</b> What evidence is needed but absent?"],["7","<b>Explore alternatives.</b> What other explanations or approaches exist?"],["8","<b>State uncertainty.</b> What remains unknown or ambiguous?"],["9","<b>Decision-changing evidence.</b> What new evidence would change the conclusion?"]]);
+stepper($("#agFlow"),$("#agOut"),$("#agPrev"),$("#agNext"),[
+ ["Plan","<b>1 Plan.</b> Identify the required topics and the study sequence."],["Select tool","<b>2 Select tool.</b> Access the provided lecture materials."],["Execute","<b>3 Execute.</b> Retrieve and organise relevant content."],["Observe","<b>4 Observe.</b> Inspect what was found."],["Evaluate","<b>5 Evaluate.</b> Spot missing topics or weak coverage."],["Human check","<b>6 Human check.</b> The student reviews the proposed plan. A control point before any further action."],["Next action","<b>7 Next action.</b> Revise the plan or generate targeted practice questions."],["Result","<b>8 Final result.</b> The completed study plan. An agent is a decision loop around a goal, not simply a chatbot with more tools."]]);
+
+/* ---------- rubric ---------- */
+const RC=[["Relevance","Does it address the task?"],["Accuracy","Are the claims correct and verifiable?"],["Clarity","Is it easy to understand?"],["Structure","Is the output well organised?"],["Completeness","Are important elements missing?"]];
+const RM=["ChatGPT","Gemini","Claude"];
+$("#rubric").innerHTML=`<tr><th>Criterion</th><th>What to look for</th>${RM.map(m=>`<th>${m}</th>`).join("")}</tr>`+RC.map((c,i)=>`<tr><td><b>${c[0]}</b></td><td>${c[1]}</td>${RM.map((m,j)=>`<td><select aria-label="${m} ${c[0]}" data-r="${i}" data-m="${j}" style="font:inherit;padding:4px;border:1px solid var(--line2);border-radius:5px;background:var(--paper);color:var(--ink)"><option value="">–</option>${[1,2,3,4,5].map(n=>`<option>${n}</option>`).join("")}</select></td>`).join("")}</tr>`).join("")+`<tr><th colspan="2">Total</th>${RM.map((m,j)=>`<th id="rt${j}">0</th>`).join("")}</tr>`;
+$("#rubric").addEventListener("change",()=>{const t=[0,0,0],cnt=[0,0,0];$$("#rubric select").forEach(s=>{if(s.value){t[s.dataset.m]+=+s.value;cnt[s.dataset.m]++}});t.forEach((v,j)=>$("#rt"+j).textContent=v);
+  if(cnt.every(c=>c===5)){const mx=Math.max(...t),w=RM.filter((m,j)=>t[j]===mx);$("#rubricFb").className="feedback good";$("#rubricFb").textContent=`Highest score: ${w.join(" and ")} (${mx}/25). Now write down the evidence that supports your judgement.`}});
+
+/* ---------- tool gallery ---------- */
+const CAT={all:"All tools",ass:"General assistants",write:"Writing & documents",vis:"Visual & design",data:"Data analysis",pres:"Presentations",img:"Images"};
+const TOOLS=[
+ ["ChatGPT","chatgpt.com","ass","OpenAI’s conversational assistant for reasoning, writing, learning, coding, analysis and research.",["Reasoning & problem solving","Writing & content generation","Web search & deep research","File & data analysis","Image understanding & generation","Voice & multimodal interaction"],"Same prompt → ChatGPT → response → inspect → compare","Model-comparison tutorial","Fluent ≠ correct. Quality depends on model, prompt, context, tools and task."],
+ ["Gemini","gemini.google.com","ass","Google DeepMind’s multimodal model family working across text, images, audio, video and code.",["Reasoning & problem solving","Multimodal understanding","Coding","Learning & research support","Multi-step & agentic tasks","Google ecosystem integration"],"Same prompt → Gemini → result → compare with other models","Model-comparison tutorial","Capabilities vary by version, task and context. Compare actual outputs, not reputations."],
+ ["Claude","claude.ai","ass","Anthropic’s model family for reasoning, writing, analysis, coding, research and multimodal tasks.",["Reasoning & analysis","Long-form & document analysis","Writing","Coding","Web search","Interactive Artifacts: documents, diagrams, websites, tools"],"Same prompt → Claude → response → inspect → compare","Model-comparison tutorial; Skill exercise","No model is best for every task."],
+ ["QuillBot","quillbot.com","write","AI writing and language tool that rewrites, improves, summarises, translates and refines text while preserving meaning.",["Paraphrasing","Writing & editing","Summarisation","Translation","Plagiarism checking","Citation generator; Word and browser integration"],"Draft → improve → paraphrase → review → cite & verify","Activities 2 and 3","AI-assisted writing ≠ AI-authored work. Check every citation element (authors, year, title, journal, DOI) against the original source."],
+ ["ChatPDF","chatpdf.com","write","Upload a PDF and ask questions about it: summarise, locate information, explain passages, answer with page references.",["Chat with PDFs","Summarise","Find information","Source-based responses","Multilingual","Multiple documents where supported"],"Ask → explore → summarise → verify","Activity 4","The page reference is where verification starts: open it and check."],
+ ["NotebookLM","notebooklm.google","write","Research and learning assistant grounded in your own sources: documents, PDFs, slides, web content.",["Source-based Q&A","Summaries & study guides","Mind maps","Audio overviews","Video & visual content","Reports, flashcards, quizzes"],"Collect sources → ask → explore → summarise → organise → create → verify","Activity 8; Assignment 2","Source-grounded ≠ automatically correct."],
+ ["NoteGPT","notegpt.io","write","Analyses and summarises documents, videos, audio and web pages; turns them into notes and visual resources.",["Document summarisation","Video summarisation","Audio summarisation","Chat with content","Mind maps","Notes & slides"],"Watch/read/listen → summarise → ask → organise → visualise → review","Activity 10","Summaries of lectures or videos can miss nuance."],
+ ["Venngage","venngage.com","vis","Infographic and visual-communication platform turning complex information into clear visuals.",["Infographics","Professional templates","AI-powered design","Charts & data visualisation","Icons","Export & share"],"Lecture content → key information → visual design → infographic → check → share","Activity 5","Check any generated infographic against the lecture content."],
+ ["MyMap AI","mymap.ai","vis","Visual thinking tool that turns text, prompts and documents into mind maps, flowcharts and diagrams via chat.",["Mind maps","Flowcharts & diagrams","Chat-based creation","Document & web input","Brainstorming","Export & sharing"],"Study → organise → connect → visualise → review","Activity 6","Check the map for missing, misplaced or wrongly connected branches."],
+ ["Excalidraw","excalidraw.com","vis","Collaborative virtual whiteboard for diagrams and concept maps in a hand-drawn style.",["Freehand drawing","Diagrams & concept maps","Real-time collaboration","Annotations","Export & share","Browser-based"],"Read → identify concepts → draw → connect → explain → review","Activity 7","Redraw AI → ML → DL → GenAI → LLMs and add one example per level."],
+ ["Canvas in Gemini","gemini.google.com","vis","Interactive workspace in Gemini to create and refine documents, slides, apps and code with a live preview.",["Writing & editing","Presentations","Coding & prototyping","Visual & interactive content","Refine a selected part","Export where available"],"Idea → prompt → create → preview → refine → verify → export","Activity 9","Generate, inspect, modify and refine; verify before export."],
+ ["Canva","canva.com","vis","Visual design platform for presentations, documents, graphics and video with templates and AI features.",["AI-powered design","Templates & elements","Image editing","Presentations & video","Collaboration & sharing"],"Idea → prompt → create → inspect → refine → share","Design practice","Check scientific accuracy, text, sources and image rights before sharing."],
+ ["Zoho Analytics","zoho.com/analytics","data","Self-service BI platform to connect, analyse, visualise and share data; Ask Zia answers questions in natural language.",["Reports & pivot tables","Ask Zia (natural language)","Dashboards","Predictive analytics / AutoML","No-code analytics","Controlled sharing"],"Data → ask → analyse → visualise → interpret → verify → share","Activity 14","Does the chart actually answer the question? An average cannot show variation. Use de-identified or synthetic data."],
+ ["Julius AI","julius.ai","data","Data-analysis workspace: ask questions in natural language, run code-backed analysis (Python, R, SQL), get charts and insights.",["Upload Excel, CSV, PDF","Clean & transform","Statistics & modelling","Visualisation","Forecasting","Code-backed analysis"],"Upload → ask → analyse → visualise → interpret → verify → export","Data analysis","Correlation ≠ causation. Check columns, outliers and representativeness."],
+ ["Z AI","chat.z.ai","pres","Conversational platform for content generation, Q&A, translation and presentation creation.",["Presentation generation","Content generation","Conversational refinement","Translation","Q&A & reasoning"],"Topic → prompt → outline → slides → review → refine","Activity 12","You remain responsible for accuracy, structure, sources and academic quality."],
+ ["Kimi AI","kimi.com","pres","Moonshot AI’s long-context assistant for analysis, research, content creation and coding over large sources.",["Long-context analysis","Presentation support","Research & web search","Multimodal interaction","Coding assistance"],"Sources → analyse → outline → generate → review → refine → present","Activity 13","Long context ≠ correct content."],
+ ["ImgUpscaler","imgupscaler.ai","img","Increases image resolution and perceived sharpness using AI-assisted enhancement.",["Upscaling","Detail enhancement","Noise reduction","Restoration of older images"],"Upload → upscale → inspect → compare → refine → use","Activity 11","AI may add or alter details. Never use enhanced images as diagnostic evidence; never upload identifiable patient images."],
+ ["Nano Banana","gemini.google.com","img","Name used for Google’s Gemini image-generation and editing models.",["Image generation","Editing by instruction","Iterative transformation","Combining images","Subject consistency"],"Describe → generate → inspect → edit → refine","Activity 15","AI-generated visual ≠ verified scientific illustration. Check structures, labels and proportions."]];
+let tf="all";
+$("#toolFilters").innerHTML=Object.entries(CAT).map(([k,v])=>`<button data-f="${k}" class="${k==="all"?"on":""}">${v}</button>`).join("");
+function renderTools(){$("#toolGrid").innerHTML=TOOLS.map((t,i)=>tf==="all"||t[2]===tf?`<button class="tool" data-t="${i}"><span class="tn">${t[0]}</span><span class="tu">${t[1]}</span><span class="td">${t[3]}</span><span class="tc">${CAT[t[2]]} · ${t[6]}</span></button>`:"").join("")}
+$("#toolFilters").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;tf=b.dataset.f;$$("#toolFilters button").forEach(x=>x.classList.toggle("on",x===b));renderTools()});
+renderTools();
+const dlg=$("#toolDlg");
+$("#toolGrid").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(!b)return;const t=TOOLS[+b.dataset.t];
+  $("#dT").textContent=t[0];$("#dU").textContent=t[1]+" · "+CAT[t[2]];
+  $("#dB").innerHTML=`<p>${t[3]}</p><h4>Key capabilities</h4><div class="chips">${t[4].map(c=>`<span class="chip t">${c}</span>`).join("")}</div><h4 style="margin-top:14px">Workflow</h4><div class="flow">${t[5].split(" → ").map((s,k)=>`${k?"<b>→</b>":""}<span>${s}</span>`).join("")}</div><h4 style="margin-top:14px">Used in</h4><p>${t[6]}</p><div class="key warn" style="margin-bottom:0"><span class="ic">!</span><p>${t[7]}</p></div>`;
+  if(dlg.showModal)dlg.showModal();else dlg.setAttribute("open","")});
+$("#dClose").onclick=()=>dlg.close?dlg.close():dlg.removeAttribute("open");
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+
+/* ---------- skill builder ---------- */
+const SF=[["Name","What is the Skill called?"],["Purpose","Why does this Skill exist?"],["Role","What role should the AI perform?"],["Input","What information does it receive?"],["Instructions","What must the AI do?"],["Process","What steps should it follow?"],["Constraints","What rules or limits must it respect?"],["Output","What should it produce?"],["Quality criteria","What makes the result acceptable?"],["Failure conditions","When should it stop, flag, or ask for clarification?"],["Example","What does a good result look like?"]];
+const PRE={
+ summ:["Lecture Summarizer","Convert a lecture transcript into a concise study summary.","Medical education assistant for first-year students","Lecture transcript or notes provided by the student","Identify the key concepts and definitions; summarise faithfully","Identify → Organise → Summarise → Check","First-year language; no information beyond the transcript; no diagnosis or treatment advice","Key concepts + definitions + review questions","Every concept is supported by the transcript; terminology preserved","Ask for clarification if the transcript is incomplete; stop if the input is not lecture material","Input: 20-minute transcript on inflammation → Output: 5 concepts, 6 terms, 3 questions"],
+ quiz:["Quiz Generator","Create practice questions from provided learning material.","Assessment designer for MBBS Year 1","Learning material provided by the student","Write questions that test understanding, not memorisation","Read → Select key concepts → Draft items → Write answers → Check","Only from the provided material; one correct answer per item; plausible distractors","Numbered MCQs with answers and a one-line explanation each","Every answer is traceable to the material","Stop and flag if the material is too short to support the requested number of questions","Input: notes on the cell membrane → Output: 5 MCQs with explanations"],
+ expl:["Concept Explainer","Explain difficult concepts at an appropriate learning level.","Patient, clear tutor for first-year medical students","A concept name and the student’s current level","Explain simply, then add one analogy and one check question","Define → Explain → Analogy → Check","Under 200 words; accurate terminology; no clinical advice","Definition, explanation, analogy, one check question","Accurate, level-appropriate, and verifiable in a textbook","Ask which level if not given; flag if the concept is outside the course","Input: “osmosis, beginner” → Output: 150-word explanation with an analogy"],
+ rev:["Document Reviewer","Identify key points, gaps, inconsistencies or issues in a document.","Careful academic reviewer","A student’s draft document","Summarise the argument, then list gaps and inconsistencies","Read → Map claims → Check support → List issues → Suggest fixes","Do not rewrite the document; be specific and constructive","Key points; issues table (location, issue, suggestion)","Every issue points to a specific location","Stop if the document is empty or not in scope","Input: 2-page essay → Output: 5 key points, 6 issues with suggestions"],
+ evid:["Evidence Organizer","Organise provided evidence into a structured, traceable format.","Evidence-synthesis assistant","Abstracts or excerpts provided by the student","Extract claims, study type and findings; keep source links","Extract → Classify → Tabulate → Flag gaps","Only provided sources; never invent references","Evidence table: source, claim, study type, finding, limitation","Every row traceable to a provided source","Flag any claim that cannot be traced to a source","Input: 4 abstracts → Output: 4-row evidence table with limitations"],
+ clear:Array(11).fill("")};
+$("#skillForm").innerHTML=SF.map((f,i)=>`<div class="field"><label for="sf${i}">${i+1}. ${f[0]} <i>${f[1]}</i></label><input id="sf${i}"></div>`).join("");
+$("#skillMeter").innerHTML=SF.map((f,i)=>`<span title="${f[0]}">${i+1}</span>`).join("");
+function skill(){const v=SF.map((f,i)=>$("#sf"+i).value.trim());const sp=$$("#skillMeter span");v.forEach((x,i)=>sp[i].classList.toggle("ok",!!x));
+  const n=v.filter(Boolean).length;$("#skillOut").textContent=n?SF.map((f,i)=>v[i]?`## ${f[0]}\n${v[i]}`:"").filter(Boolean).join("\n\n"):"Choose a starting Skill or fill the fields.";
+  $("#skillFb").className="feedback "+(n===11?"good":"");$("#skillFb").textContent=n===11?"All 11 fields complete. Now test it on one realistic input and find one failure.":`${n} of 11 fields complete.`}
+$("#skillForm").addEventListener("input",skill);
+$$("[data-skill]").forEach(b=>b.onclick=()=>{PRE[b.dataset.skill].forEach((v,i)=>$("#sf"+i).value=v);skill()});
+$("#skillCopy").onclick=()=>copy($("#skillOut").textContent);skill();
+
+/* ---------- A4 ---------- */
+const A4=[["Problem",["Student needs a book","Weather lookup","Translate text"],0],["Client",["Library application","Catalogue service","Student"],0],["API",["Catalogue API","Library building","Search terms"],0],["Request",["Search terms and filters","Matching books","Library application"],0],["Response",["Matching books","Search terms","Authentication"],0]];
+$("#a4").innerHTML=A4.map((a,i)=>`<div class="field"><label for="a4s${i}">${a[0]}</label><select id="a4s${i}"><option value="">Choose…</option>${shuffle(a[1].map((o,k)=>[o,k])).map(o=>`<option value="${o[1]}">${o[0]}</option>`).join("")}</select></div>`).join("");
+$("#a4Check").onclick=()=>{let ok=0;A4.forEach((a,i)=>{const s=$("#a4s"+i);const r=s.value==="0";s.style.borderColor=s.value?(r?"var(--green)":"var(--red)"):"";if(r)ok++});$("#a4Fb").className="feedback "+(ok===5?"good":"bad");$("#a4Fb").textContent=ok===5?"Correct: student needs a book → library application → catalogue API → search terms/filters → matching books.":`${ok} of 5 correct. Adjust the red boxes.`};
+
+/* ---------- sorter ---------- */
+function sorter(poolEl,binsEl,checkBtn,resetBtn,fb,bins,items){let sel=null,place={};
+  function r(){poolEl.innerHTML=items.map((it,i)=>place[i]===undefined?`<button class="item ${sel===i?"sel":""}" data-i="${i}">${it[0]}</button>`:"").join("")||'<span class="muted">All placed. Press Check.</span>';
+    binsEl.innerHTML=bins.map((b,k)=>`<div class="bin" data-b="${k}" role="button" tabindex="0" aria-label="Place in ${b}"><h5>${b}</h5>${items.map((it,i)=>place[i]===k?`<button class="item" data-i="${i}" data-back="1">${it[0]}</button>`:"").join("")}</div>`).join("")}
+  poolEl.addEventListener("click",e=>{const b=e.target.closest("[data-i]");if(!b)return;sel=+b.dataset.i;r()});
+  binsEl.addEventListener("click",e=>{const back=e.target.closest("[data-back]");if(back){delete place[+back.dataset.i];r();return}const bin=e.target.closest("[data-b]");if(bin&&sel!==null){place[sel]=+bin.dataset.b;sel=null;r()}});
+  binsEl.addEventListener("keydown",e=>{if(e.key==="Enter"){const bin=e.target.closest("[data-b]");if(bin&&sel!==null){place[sel]=+bin.dataset.b;sel=null;r()}}});
+  checkBtn.onclick=()=>{let ok=0,n=0;items.forEach((it,i)=>{if(place[i]!==undefined){n++;const el=$(`[data-b="${place[i]}"] [data-i="${i}"]`,binsEl);const g=place[i]===it[1];el.classList.add(g?"right":"wrong");if(g)ok++}});fb.className="feedback "+(ok===items.length?"good":"bad");fb.textContent=ok===items.length?"All correct.":`${ok} of ${items.length} correct${n<items.length?`, ${items.length-n} not placed yet`:""}. Click a red card to return it.`};
+  resetBtn.onclick=()=>{place={};sel=null;fb.textContent="";r()};r()}
+sorter($("#a5pool"),$("#a5bins"),$("#a5Check"),$("#a5Reset"),$("#a5Fb"),["Host","Client","Server","Tool","Resource","Prompt"],shuffle([["The medical education AI app",0],["The MCP connector inside the app",1],["The learning system’s MCP server",2],["Search the question bank",3],["Course materials",4],["Predefined “generate a revision quiz” instruction",5]]));
+sorter($("#aiPool"),$("#aiBins"),$("#aiCheck"),$("#aiReset"),$("#aiFb"),["Appropriate use","Potentially problematic"],shuffle([["Brainstorming ideas",0],["Explaining difficult concepts",0],["Creating practice questions",0],["Improving grammar and clarity",0],["Summarising provided material",0],["Generating study plans",0],["Creating visual learning materials",0],["Submitting AI work as your own when prohibited",1],["Using AI during restricted examinations",1],["Fabricating references or evidence",1],["Generating assignments without understanding them",1],["Bypassing required learning activities",1],["Misrepresenting the extent of AI assistance",1]]));
+
+/* ---------- poll ---------- */
+$("#poll1").addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b)return;const r=b.dataset.a==="1";$$("#poll1 button").forEach(x=>{x.disabled=true;x.style.borderColor=x.dataset.a==="1"?"var(--green)":""});
+  $("#poll1Fb").className="feedback "+(r?"good":"bad");$("#poll1Fb").textContent=(r?"Right. ":"Not quite. ")+"Calendar access is the Tool, MCP is the connection protocol. That alone does not make the system an Agent; a Skill would describe how to use the calendar for a task."});
+
+/* ---------- ordering ---------- */
+const ORD=["Trigger","Input","Processing","AI","Decision","Human check","Action","Output"];let ordPicked=[];
+function ordR(){$("#ordPool").innerHTML=shuffleOnce.filter(x=>!ordPicked.includes(x)).map(x=>`<button class="item" data-o="${x}">${x}</button>`).join("")||'<span class="muted">Sequence complete.</span>';
+  $("#ordList").innerHTML=ordPicked.map((x,i)=>`<li style="color:${x===ORD[i]?"var(--green)":"var(--red)"}">${x}</li>`).join("");
+  const ok=ordPicked.every((x,i)=>x===ORD[i]);const fb=$("#ordFb");
+  if(ordPicked.length===8&&ok){fb.className="feedback good";fb.textContent="Correct order. Notice the human check sits between reasoning and action."}
+  else if(!ok){fb.className="feedback bad";fb.textContent="The last step is out of place. Reset and try again, or keep going to see the rest."}else fb.textContent=""}
+let shuffleOnce=shuffle(ORD);
+$("#ordPool").addEventListener("click",e=>{const b=e.target.closest("[data-o]");if(b){ordPicked.push(b.dataset.o);ordR()}});
+$("#ordReset").onclick=()=>{ordPicked=[];shuffleOnce=shuffle(ORD);ordR()};ordR();
+
+/* ---------- HITL ---------- */
+const HL=[["Draft a study summary",0],["Recommend an email draft",1],["Send an email to your study group",2],["Delete files",2],["Access restricted data",2]];const HO=["Agent may proceed","Agent prepares; human reviews","Human approval before action"];
+$("#hitl").innerHTML=HL.map((h,i)=>`<div class="confrow"><span>${h[0]}</span><div class="seg" data-h="${i}">${HO.map((o,k)=>`<button data-k="${k}">${o}</button>`).join("")}</div></div>`).join("");
+$("#hitl").classList.add("conf");
+$("#hitl").addEventListener("click",e=>{const b=e.target.closest("[data-k]");if(!b)return;const seg=b.parentElement,i=+seg.dataset.h,k=+b.dataset.k;$$("button",seg).forEach(x=>x.classList.toggle("on",x===b));
+  const r=HL[i][1]===k;b.style.background=r?"var(--green)":"var(--red)";const fb=$("#hitlFb");fb.className="feedback "+(r?"good":"bad");
+  fb.textContent=r?(i===2?"Right: human-in-the-loop. The agent may draft, but a human approves before sending.":"Right."):"Not quite. The more consequential the action, the closer the human should be to the decision point."});
+
+/* ---------- self-test app ---------- */
+let st=null;
+$("#stStart").onclick=()=>{const qs=$("#stIn").value.split("\n").map(l=>l.split("|").map(s=>s.trim())).filter(p=>p[0]&&p[1]);
+  if(!qs.length){$("#stStage").innerHTML='<p class="feedback bad">Add at least one line in the form: question | answer.</p>';return}
+  st={queue:qs.slice(),right:0,total:qs.length,wrongRound:[],timer:$("#stTimer").checked,t:null};stNext()};
+function stNext(){clearInterval(st.t);if(!st.queue.length){if(st.wrongRound.length){st.queue=st.wrongRound;st.wrongRound=[];}else{$("#stStage").innerHTML=`<div class="key"><span class="ic">✓</span><p><b>Finished.</b> First-attempt score: ${st.right} of ${st.total}. Wrong answers were repeated until you got them.</p></div>`;return}}
+  const q=st.queue.shift();st.cur=q;st.first=st.first||new Set();
+  $("#stStage").innerHTML=`<div class="qcard"><div class="qn">${st.queue.length+1} left · score ${st.right}/${st.total}${st.timer?` · <span id="stClock">30</span>s`:""}</div><h4>${esc(q[0])}</h4><button class="btn sm" id="stReveal">Reveal answer</button><div id="stAns"></div></div>`;
+  $("#stReveal").onclick=stReveal;
+  if(st.timer){let s=30;st.t=setInterval(()=>{s--;const c=$("#stClock");if(c)c.textContent=s;if(s<=0){clearInterval(st.t);stReveal()}},1000)}}
+function stReveal(){clearInterval(st.t);const q=st.cur;$("#stReveal").disabled=true;$("#stAns").innerHTML=`<div class="explain">${esc(q[1])}</div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm primary" id="stR">I was right</button><button class="btn sm" id="stW">I was wrong</button></div>`;
+  $("#stR").onclick=()=>{if(!st.first.has(q[0]))st.right++;st.first.add(q[0]);stNext()};$("#stW").onclick=()=>{st.first.add(q[0]);st.wrongRound.push(q);stNext()}}
+
+/* ---------- flashcards ---------- */
+const FC=[
+["Foundations","What is AI, according to UNESCO/COMEST?","Computer systems designed to perform functions associated with human intelligence: perception, learning, reasoning, problem-solving, language interaction and creative production."],
+["Foundations","ANI, AGI, ASI?","Narrow (deployed today), General (hypothetical, human-level breadth), Superintelligent (theoretical, beyond human level). They describe breadth, not technologies."],
+["Foundations","How do AI, ML and DL relate?","AI is the broad field; ML is one approach to AI (learning from data); DL is a specialised approach within ML using multi-layer neural networks."],
+["Foundations","Does deep learning work without human intervention?","No. It still needs human-defined objectives, data preparation, training, evaluation, validation and monitoring."],
+["GenAI","Traditional AI vs generative AI?","Traditional AI predicts, classifies, detects or decides (“What is this?”). Generative AI generates or transforms content (“Create something based on what I asked”). The distinction is functional, not absolute."],
+["GenAI","Is an LLM a search engine?","No. It generates from learned patterns and whatever its context and connected tools provide. It has no automatic internet access or up-to-date information."],
+["GenAI","Name the five factors behind “pressing Enter”.","Prediction (token by token), context, knowledge cutoff, sampling, helpfulness and agreeableness. Fluent ≠ True."],
+["GenAI","AI-assisted vs AI-autonomous?","AI-assisted keeps human oversight, verification, privacy and governance. GenAI supports the decision; humans remain responsible for it."],
+["Prompting","Define prompt engineering.","The systematic process of designing, structuring and refining instructions to guide a GenAI system toward a desired output."],
+["Prompting","What does CTCO stand for?","Context · Task · Constraints · Output. Who → What → Limits → Form."],
+["Prompting","Task vs Output in CTCO?","Task tells AI what to do. Output tells AI what the result should look like."],
+["Prompting","Zero-shot vs few-shot?","Zero-shot: instruction only. Few-shot: instruction plus a few examples showing the expected pattern, style or format."],
+["Prompting","What is structured reasoning prompting?","Asking for a concise, verifiable explanation or explicit solution steps, not the model’s private internal reasoning."],
+["Prompting","Does a role make AI a qualified professional?","No. Role sets the perspective; it does not confer expertise or accountability."],
+["Prompting","Does a better prompt guarantee a correct answer?","No. It improves relevance, usefulness and checkability, not the model’s underlying knowledge. Prompting improves the question; verification protects the answer."],
+["Prompting","In the 2023 study of ChatGPT-3.5 medical references, how many were real and accurate?","Only 7%. 47% were fabricated; 46% real but inaccurate (Bhattacharyya et al., Cureus 2023)."],
+["Prompting","The interaction loop?","Prompt → Response → Inspect → Critique → Refine → Verify. The first response is a draft."],
+["Tools","Model vs tool?","The model generates and processes language; a tool provides an external capability (search, calculation, databases, files, APIs)."],
+["Tools","Why do tools change everything?","More checkability (traceable evidence) and more consequence (errors can become real-world actions)."],
+["Tools","NotebookLM vs ChatPDF?","ChatPDF: chat with a PDF. NotebookLM: work with a collection of your sources and transform them into many learning outputs."],
+["Tools","What is the risk of AI image upscaling?","It may add or alter details. Never use enhanced images as diagnostic evidence."],
+["Skills","What is a Skill?","A reusable capability that tells an AI system how to perform a particular type of task consistently."],
+["Skills","Skill vs Tool (recipe analogy)?","Skill = the recipe (how). Model = the cook. Tool = the oven (what it can use)."],
+["Skills","Name the 11 fields of a Skill.","Name, Purpose, Role, Input, Instructions, Process, Constraints, Output, Quality criteria, Failure conditions, Example."],
+["Skills","Five checks of a good Skill?","Focused, Explicit, Structured, Bounded, Demonstrated."],
+["Skills","What is a Challenger Skill?","A Skill that asks AI to test a claim rather than confirm it: “What would make me wrong?” It is a critical-thinking tool, not a truth detector."],
+["Connect","What is an API?","Application Programming Interface: defines how one software system can request a capability or data from another."],
+["Connect","Six API words?","Endpoint (where), Request (what), Parameters (details), Authentication (who), Response (result), JSON (format)."],
+["Connect","What is MCP?","Model Context Protocol: an open protocol standardising how AI applications connect with tools, resources and context."],
+["Connect","Host, Client, Server?","Host: the AI app (workplace). Client: the MCP component inside it (connector). Server: a local or remote program exposing capabilities (provider)."],
+["Connect","Tool, Resource, Prompt (MCP)?","Tool = do. Resource = read. Prompt = guide with a prepared instruction."],
+["Automate","The 8-step automation pattern?","Trigger → Input → Processing → AI → Decision → Human check → Action → Output."],
+["Automate","Four reasons not to automate?","The task is rare; the thinking is the learning; sensitive data is involved; there is no effective check."],
+["Automate","Local workflow = local AI?","No. If the model is called through a cloud API, the text leaves the local environment."],
+["Agents","Define an AI agent.","A goal-oriented system that pursues a goal through multiple steps, uses tools, observes results and decides next actions until a stopping condition."],
+["Agents","Chatbot vs workflow vs agent?","Who decides the next step: the user, the designer, or the system (within limits)."],
+["Agents","HITL vs HOTL?","In-the-loop: human approves before action. On-the-loop: human monitors during execution and can stop or override."],
+["Agents","Why is a stopping condition essential?","Without one, execution is uncontrolled."],
+["Vibe coding","Define vibe coding.","An AI-assisted approach where people use natural language and AI tools to create, modify, debug and improve software iteratively."],
+["Vibe coding","When is a change a fix?","Only after it has been verified by retesting."],
+["Ethics","The 7-question ethics checklist?","Purpose, Permission, Privacy, Accuracy, Integrity, Bias, Responsibility."],
+["Ethics","Safer alternatives to real data?","Synthetic data, public data, and approved data authorised for the specific tool and use."]];
+const FCC=["All",...new Set(FC.map(f=>f[0]))];let fcCat="All",fcIdx=0,fcOrder=[],known=new Set(store.get("known",[])),reviewOnly=false;
+$("#fcFilters").innerHTML=FCC.map(c=>`<button data-c="${c}" class="${c==="All"?"on":""}">${c}</button>`).join("");
+function fcBuild(){fcOrder=FC.map((f,i)=>i).filter(i=>(fcCat==="All"||FC[i][0]===fcCat)&&(!reviewOnly||!known.has(i)));fcIdx=0;fcShow()}
+function fcShow(){const card=$("#bigcard");card.classList.remove("on");
+  if(!fcOrder.length){$("#fcQ").textContent="Nothing left to review here.";$("#fcA").textContent="Switch off “Review only unknown” or pick another category.";$("#fcCat").textContent="";$("#fcCnt").textContent="0 / 0";return}
+  const f=FC[fcOrder[fcIdx]];$("#fcCat").textContent=f[0]+(known.has(fcOrder[fcIdx])?" · known":"");$("#fcQ").textContent=f[1];setTimeout(()=>$("#fcA").textContent=f[2],150);$("#fcCnt").textContent=`${fcIdx+1} / ${fcOrder.length} · known ${known.size}/${FC.length}`}
+$("#fcFilters").addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(!b)return;fcCat=b.dataset.c;$$("#fcFilters button").forEach(x=>x.classList.toggle("on",x===b));fcBuild()});
+$("#bigcard").onclick=()=>$("#bigcard").classList.toggle("on");
+$("#fcNext").onclick=()=>{if(fcOrder.length){fcIdx=(fcIdx+1)%fcOrder.length;fcShow()}};
+$("#fcPrev").onclick=()=>{if(fcOrder.length){fcIdx=(fcIdx-1+fcOrder.length)%fcOrder.length;fcShow()}};
+$("#fcShuffle").onclick=()=>{fcOrder=shuffle(fcOrder);fcIdx=0;fcShow()};
+$("#fcKnow").onclick=()=>{if(!fcOrder.length)return;const i=fcOrder[fcIdx];known.has(i)?known.delete(i):known.add(i);store.set("known",[...known]);toast(known.has(i)?"Marked as known":"Marked as not known");fcShow()};
+$("#fcReview").onclick=e=>{reviewOnly=!reviewOnly;e.target.textContent=reviewOnly?"Show all cards":"Review only unknown";fcBuild()};
+document.addEventListener("keydown",e=>{const pane=$('[data-pane="fc"]');if(pane.hidden||e.target.matches("input,textarea,select"))return;const r=pane.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;
+  if(e.key==="ArrowRight")$("#fcNext").click();else if(e.key==="ArrowLeft")$("#fcPrev").click();else if(e.key===" "&&document.activeElement!==$("#bigcard")){e.preventDefault();$("#bigcard").click()}});
+fcBuild();
+
+/* ---------- quiz ---------- */
+const QZ=[
+["Which statement best describes what happens when you press Enter in an LLM chat?",["The model looks up the correct answer in a database","The model generates a response token by token from the available context","The model searches the internet by default","The model retrieves a stored answer written by experts"],1,"Generation, not lookup. External information needs a tool or source."],
+["Which pair correctly contrasts the UNESCO and SDAIA views of AI?",["Both focus only on robotics","UNESCO: capabilities associated with intelligence; SDAIA: practical, data-driven systems with varying autonomy","UNESCO: data pipelines; SDAIA: human-like thinking","They are identical definitions"],1,"UNESCO emphasises capabilities; SDAIA emphasises practical data-driven systems and autonomy."],
+["A medical image classifier that detects pneumonia is an example of…",["ANI","AGI","ASI","Generative AI only"],0,"It is designed for a specific task: narrow AI, which is what we deploy today."],
+["Which statement about deep learning is correct?",["It needs no human involvement","It always requires GPUs","It is a subset of machine learning that learns representations automatically","It is broader than AI"],2,"DL ⊂ ML ⊂ AI. It still requires human objectives, data preparation and validation."],
+["“Summarise this medical article for a first-year student” is a task for…",["Traditional AI","Generative AI","A rule-based chatbot","A calculator tool"],1,"It asks for new content to be generated or transformed."],
+["In CTCO, which element specifies “five bullet points followed by one MCQ”?",["Context","Task","Constraints","Output"],3,"Output tells AI what the result should look like."],
+["Which technique gives the model examples of the expected pattern?",["Zero-shot","Few-shot","Role prompting","Contextual prompting"],1,"Few-shot = instruction + examples."],
+["What does a better prompt NOT guarantee?",["Relevance","Checkability","Usefulness","Correctness"],3,"Better prompt ≠ guaranteed truth. Verification protects the answer."],
+["In the 2023 Cureus study of ChatGPT-3.5 medical references, what share was fabricated?",["7%","25%","47%","93%"],2,"47% fabricated, 46% real but inaccurate, 7% real and accurate."],
+["“If ChatGPT gives today’s weather” this is because…",["The model measured it","A search or weather tool supplied it","It was in training data","The model guessed"],1,"The model provides intelligence; a tool provides the external capability."],
+["In the recipe analogy, the Skill is the…",["Cook","Oven","Recipe","Meal"],2,"Skill = recipe (how). Model = cook. Tool = oven."],
+["Which field tells a Skill when to stop, flag or ask for clarification?",["Purpose","Quality criteria","Failure conditions","Example"],2,"Failure conditions make the Skill bounded."],
+["The main purpose of a Challenger Skill is to…",["Always disagree with the user","Replace verification","Make reasoning visible and testable","Produce the correct answer"],2,"It is a critical-thinking tool, not a truth detector."],
+["In the restaurant analogy, the waiter represents…",["The client","The API","The service","The response"],1,"The API carries the request to the service and brings back the response."],
+["In MCP, which component exposes Tools, Resources and Prompts?",["Host","Client","Server","User"],2,"The server (local or remote) is the provider."],
+["“Read course materials” in an MCP setup is a…",["Tool","Resource","Prompt","Host"],1,"Resource = read. Tool = do. Prompt = guide."],
+["In the automation pattern, where does the human check sit?",["Before the trigger","Between decision and action","After the output","It is optional everywhere"],1,"Design the check before the action, not after it."],
+["Which is a good reason NOT to automate a task?",["It is repeated weekly","The thinking itself is the learning objective","It uses public data","It has a clear check"],1,"Automating the reasoning you must learn undermines the objective."],
+["An n8n workflow calls a cloud LLM through an API. Which is true?",["All data stays local","Local workflow ≠ local AI model: the text leaves the local environment","n8n is an agent","No review is needed"],1,"The orchestration is local; the model call is cloud-based."],
+["What most distinguishes an agent from a chatbot?",["It has a nicer interface","It pursues a goal and determines its next steps","It uses a larger model","It never needs a human"],1,"Agents select and adapt subsequent actions toward a goal, within limits."],
+["An agent prepares and sends an email to your study group. Which control mode?",["No control","Human-on-the-loop only","Human-in-the-loop: approve before sending","Delete the agent"],2,"Sending is consequential: a human approves before action."],
+["In vibe coding, what makes a change a fix?",["The AI says it is fixed","The code compiles","It has been retested and verified","It adds more code"],2,"A change is not a fix until it has been verified."],
+["Which should never be uploaded to an unauthorised AI tool?",["A fictional case","Public guidelines","A patient’s medical record number","Approved course slides"],2,"When in doubt, do not upload the data."],
+["Which is a potentially problematic AI use?",["Creating practice questions","Improving grammar","Fabricating references","Generating a study plan"],2,"Fabricated references violate academic integrity."]];
+let qi=0,qs=0,qOrder=shuffle(QZ.map((q,i)=>i)),answered=false;
+function qShow(){const box=$("#quiz");if(qi>=qOrder.length){const best=Math.max(store.get("best",0),qs);store.set("best",best);
+  box.innerHTML=`<div class="qcard"><h4>Quiz complete: ${qs} / ${QZ.length}</h4><p>${qs>=20?"Excellent command of the lecture.":qs>=15?"Solid. Review the flashcards for the items you missed.":"Revisit the modules, then try again."} Best score on this device: ${best}.</p><button class="btn primary" id="qAgain">Try again with new order</button></div>`;$("#qAgain").onclick=()=>{qi=0;qs=0;qOrder=shuffle(qOrder);qShow()};return}
+  const q=QZ[qOrder[qi]];answered=false;const opts=shuffle(q[1].map((o,k)=>[o,k]));
+  box.innerHTML=`<div class="qprog"><i style="width:${qi/QZ.length*100}%"></i></div><div class="qcard"><div class="qn">Question ${qi+1} of ${QZ.length} · score ${qs}</div><h4>${q[0]}</h4>${opts.map(o=>`<button class="opt" data-k="${o[1]}">${o[0]}</button>`).join("")}<div id="qEx"></div></div>`;
+  $$("#quiz .opt").forEach(b=>b.onclick=()=>{if(answered)return;answered=true;const k=+b.dataset.k,r=k===q[2];if(r)qs++;
+    $$("#quiz .opt").forEach(x=>{x.disabled=true;if(+x.dataset.k===q[2])x.classList.add("right")});if(!r)b.classList.add("wrong");
+    $("#qEx").innerHTML=`<div class="explain"><b style="color:${r?"var(--green)":"var(--red)"}">${r?"Correct.":"Not quite."}</b> ${q[3]}</div><div style="text-align:right;margin-top:10px"><button class="btn primary sm" id="qNext">${qi+1<QZ.length?"Next question":"See my score"}</button></div>`;
+    $("#qNext").onclick=()=>{qi++;qShow()};$("#qNext").focus()})}
+qShow();
+
+/* ---------- match ---------- */
+const MT=[["Prompt","Tell AI what you need and what a useful answer looks like"],["Skill","A reusable method for performing a task"],["Tool","An external capability the AI can invoke"],["API","Lets software request data or capabilities from another system"],["MCP","A standard way for AI apps to connect to tools and resources"],["Workflow","Steps and their order defined in advance"],["Automation","Runs a defined process with reduced manual effort"],["Agent","Pursues a goal and adapts its next actions within constraints"],["Vibe coding","Describe, generate, test, refine and verify software with AI"]];
+let mSel=null,mDone=new Set(),mTries=0;
+function mBuild(){mSel=null;mDone=new Set();mTries=0;$("#mFb").textContent="";
+  $("#mL").innerHTML=shuffle(MT.map((m,i)=>i)).map(i=>`<button class="item" data-l="${i}">${MT[i][0]}</button>`).join("");
+  $("#mR").innerHTML=shuffle(MT.map((m,i)=>i)).map(i=>`<button class="item" data-r="${i}">${MT[i][1]}</button>`).join("")}
+$("#mL").addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(!b||mDone.has(+b.dataset.l))return;mSel=+b.dataset.l;$$("#mL .item").forEach(x=>x.classList.toggle("sel",x===b))});
+$("#mR").addEventListener("click",e=>{const b=e.target.closest("[data-r]");if(!b||mSel===null||mDone.has(+b.dataset.r))return;mTries++;const r=+b.dataset.r;const L=$(`#mL [data-l="${mSel}"]`);
+  if(r===mSel){mDone.add(r);L.classList.remove("sel");L.classList.add("right");b.classList.add("right");L.disabled=b.disabled=true;mSel=null;
+    $("#mFb").className="feedback good";$("#mFb").textContent=mDone.size===9?`All nine matched in ${mTries} attempts.`:`${mDone.size} of 9 matched.`}
+  else{b.classList.add("wrong");setTimeout(()=>b.classList.remove("wrong"),600);$("#mFb").className="feedback bad";$("#mFb").textContent="Not a match. Try another description."}});
+$("#mReset").onclick=mBuild;mBuild();
+
+/* ---------- glossary ---------- */
+const GL=[["AI (artificial intelligence)","An umbrella field of systems performing functions associated with human intelligence."],["ANI / AGI / ASI","Narrow (deployed), general (hypothetical), superintelligent (theoretical) AI."],["Machine learning","Algorithms that learn patterns from data rather than only explicit rules."],["Deep learning","A subset of ML using multi-layer neural networks that learn representations."],["Generative AI","AI that learns patterns and generates new content in response to instructions."],["LLM","Large language model trained on extensive language data to generate coherent responses."],["Token","A piece of text the model generates one after another."],["Knowledge cutoff","The end of the model’s training period; newer information may be missing."],["Sampling","Probabilistic generation; the same prompt may give different answers."],["Hallucination","Fluent AI output that is incorrect, unsupported or fabricated."],["Prompt engineering","Designing, structuring and refining instructions to guide GenAI."],["CTCO","Context, Task, Constraints, Output: a reusable prompt frame."],["8Rs","Role, Relevance, Requests, Rules, Replica, Resources, References, Re-evaluation."],["Zero-shot","Prompting with an instruction only."],["Few-shot","Prompting with an instruction plus examples."],["Iterative interaction","Improving a response one round at a time: inspect, critique, refine, verify."],["Tool","An external capability the AI can call: search, calculator, files, APIs."],["Skill","A reusable capability defining how to perform a type of task consistently."],["Challenger Skill","A Skill that tests a claim instead of confirming it."],["API","Application Programming Interface: how one system requests a service from another."],["Endpoint","The address where an API request is sent."],["JSON","A structured format for request and response data."],["MCP","Model Context Protocol: an open standard connecting AI apps to tools and resources."],["MCP host / client / server","The AI app / the connector inside it / the program exposing capabilities."],["Workflow","A predefined sequence of steps producing an intended result."],["Automation","Running a defined process with reduced manual effort."],["Local-first","Choosing where AI processing happens based on data, capability and governance."],["n8n","A visual workflow-automation platform connecting apps, APIs and AI models."],["AI agent","A goal-oriented system that plans, acts, observes and adapts until a stopping condition."],["Stopping condition","The rule that ends an agent’s loop; without it, execution is uncontrolled."],["HITL","Human-in-the-loop: approval before action."],["HOTL","Human-on-the-loop: monitoring during action, with the ability to intervene."],["Connector","Opens a channel between an AI app and an external service; inherits your permissions."],["Custom GPT","A configured version of ChatGPT for a specific purpose (retirement planned Dec 2026)."],["Vibe coding","Building software by describing it in natural language, then testing and refining."],["Synthetic data","Fictional data created for practice, containing no real person’s information."]];
+function glR(){const q=$("#glQ").value.toLowerCase();$("#gloss").innerHTML=GL.filter(g=>(g[0]+g[1]).toLowerCase().includes(q)).map(g=>`<div><b>${g[0]}</b><p>${g[1]}</p></div>`).join("")||'<p class="muted">No term matches. Try a shorter word.</p>'}
+$("#glQ").addEventListener("input",glR);glR();
+
+/* ---------- self assessment ---------- */
+const CF=["Not yet","Somewhat","Confident"];let conf=store.get("conf",{});
+function cfR(){$("#conf").innerHTML=LO.map((l,i)=>`<div class="confrow"><span><span class="bl">${l[0]}</span><br>${i+1}. ${l[1]}</span><div class="seg" data-c="${i}">${CF.map((c,k)=>`<button class="${conf[i]===k?"on":""}" data-k="${k}">${c}</button>`).join("")}</div></div>`).join("");
+  const n=Object.values(conf).filter(v=>v===2).length;$("#confFb").className="feedback "+(n===9?"good":"");$("#confFb").textContent=`${n} of 9 outcomes rated confident.`+(n<9&&Object.keys(conf).length?" Use the flashcards and activities for the rest.":"")}
+$("#conf").addEventListener("click",e=>{const b=e.target.closest("[data-k]");if(!b)return;conf[b.parentElement.dataset.c]=+b.dataset.k;store.set("conf",conf);cfR()});cfR();
+})();
+</script>
+</body>
+</html>
